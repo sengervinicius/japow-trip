@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Japan February 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --paper: #faf9f7;
+      --stone: #6b6b6b;
+      --mist: #e8e6e3;
+      --accent: #c41e3a;
+      --tokyo: #2d5a7b;
+      --kyoto: #8b4d6b;
+      --niseko: #4a7c6f;
+      --card: #ffffff;
+      --booked: #15803d;
+      --tobook: #b45309;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    /* Header */
+    header {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 3rem 1.5rem 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: rgba(250,249,247,0.6);
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      background: var(--paper);
+      border-bottom: 1px solid var(--mist);
+      z-index: 100;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      padding: 0 1rem;
+      min-width: max-content;
+    }
+
+    nav a {
+      display: block;
+      padding: 1rem 1.25rem;
+      text-decoration: none;
+      color: var(--stone);
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: color 0.2s;
+    }
+
+    nav a:hover, nav a.active {
+      color: var(--ink);
+    }
+
+    nav a[data-city="tokyo"] { border-bottom: 2px solid transparent; }
+    nav a[data-city="tokyo"]:hover, nav a[data-city="tokyo"].active { border-color: var(--tokyo); }
+    nav a[data-city="kyoto"] { border-bottom: 2px solid transparent; }
+    nav a[data-city="kyoto"]:hover, nav a[data-city="kyoto"].active { border-color: var(--kyoto); }
+    nav a[data-city="niseko"] { border-bottom: 2px solid transparent; }
+    nav a[data-city="niseko"]:hover, nav a[data-city="niseko"].active { border-color: var(--niseko); }
+
+    /* Main Content */
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* Booking Legend */
+    .legend {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      background: var(--card);
+      border: 1px solid var(--mist);
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.booked { background: var(--booked); }
+    .legend-dot.tobook { background: var(--tobook); }
+
+    /* Day Sections */
+    .day-section {
+      margin-bottom: 3rem;
+    }
+
+    .day-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .day-number {
+      font-family: 'Instrument Serif', serif;
+      font-size: 2.5rem;
+      line-height: 1;
+    }
+
+    .day-info {
+      flex: 1;
+    }
+
+    .day-date {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .day-subtitle {
+      color: var(--stone);
+      font-size: 0.85rem;
+    }
+
+    .city-badge {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      color: white;
+    }
+
+    .city-badge.tokyo { background: var(--tokyo); }
+    .city-badge.kyoto { background: var(--kyoto); }
+    .city-badge.niseko { background: var(--niseko); }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      bottom: 0.5rem;
+      width: 1px;
+      background: var(--mist);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 1.25rem;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -1.5rem;
+      top: 0.5rem;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--mist);
+      transform: translateX(-3px);
+    }
+
+    .timeline-item.highlight::before {
+      background: var(--accent);
+    }
+
+    .timeline-item.transport::before {
+      background: var(--ink);
+    }
+
+    .timeline-item.booked::before {
+      background: var(--booked);
+      width: 9px;
+      height: 9px;
+    }
+
+    .timeline-time {
+      font-size: 0.8rem;
+      color: var(--stone);
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.9rem;
+      color: var(--stone);
+    }
+
+    .timeline-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      margin-top: 0.35rem;
+      margin-right: 0.25rem;
+    }
+
+    .tag-food { background: #fef3e2; color: #b45309; }
+    .tag-explore { background: #e0f2fe; color: #0369a1; }
+    .tag-transport { background: #f3f4f6; color: #4b5563; }
+    .tag-ski { background: #dbeafe; color: #1d4ed8; }
+    .tag-relax { background: #fce7f3; color: #be185d; }
+    .tag-booked { background: #dcfce7; color: #15803d; font-weight: 600; }
+    .tag-tobook { background: #fef3c7; color: #b45309; font-weight: 600; }
+    .tag-guide { background: #ede9fe; color: #6d28d9; }
+
+    /* Logistics Box */
+    .logistics-box {
+      background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+      border: 1px solid var(--mist);
+      border-left: 3px solid var(--ink);
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      margin-left: -1.5rem;
+    }
+
+    .logistics-box h4 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--stone);
+      margin-bottom: 0.5rem;
+    }
+
+    .logistics-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+      border-bottom: 1px dashed var(--mist);
+    }
+
+    .logistics-row:last-child {
+      border-bottom: none;
+    }
+
+    .logistics-route {
+      font-weight: 500;
+    }
+
+    .logistics-time {
+      color: var(--stone);
+      text-align: right;
+    }
+
+    .logistics-code {
+      font-size: 0.75rem;
+      color: var(--stone);
+      background: white;
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+      margin-left: 0.5rem;
+    }
+
+    /* Options Box */
+    .options-box {
+      background: #fafafa;
+      border: 1px dashed var(--mist);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-top: 1rem;
+      margin-left: -1.5rem;
+    }
+
+    .options-box h4 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--stone);
+      margin-bottom: 0.75rem;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+    }
+
+    .option-item input[type="checkbox"] {
+      margin-top: 0.25rem;
+      accent-color: var(--accent);
+    }
+
+    .option-item label {
+      cursor: pointer;
+    }
+
+    .option-note {
+      font-size: 0.8rem;
+      color: var(--stone);
+      font-style: italic;
+      margin-top: 0.5rem;
+    }
+
+    /* Divider */
+    .city-divider {
+      text-align: center;
+      padding: 2rem 0;
+      position: relative;
+    }
+
+    .city-divider::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 1px;
+      background: var(--mist);
+    }
+
+    .city-divider span {
+      position: relative;
+      background: var(--paper);
+      padding: 0 1.5rem;
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--stone);
+    }
+
+    /* Hotel Box */
+    .hotel-box {
+      background: var(--card);
+      border: 1px solid var(--mist);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+
+    .hotel-name {
+      font-weight: 600;
+    }
+
+    .hotel-status {
+      font-size: 0.75rem;
+      color: var(--booked);
+    }
+
+    /* Niseko Reference */
+    .reference-section {
+      background: var(--card);
+      border: 1px solid var(--mist);
+      border-radius: 12px;
+      margin-top: 2rem;
+      overflow: hidden;
+    }
+
+    .reference-header {
+      padding: 1rem 1.25rem;
+      background: #f8f8f8;
+      border-bottom: 1px solid var(--mist);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .reference-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--mist);
+    }
+
+    .reference-col {
+      background: var(--card);
+      padding: 1rem 1.25rem;
+    }
+
+    .reference-col h4 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--stone);
+      margin-bottom: 0.75rem;
+    }
+
+    .reference-col ul {
+      list-style: none;
+      font-size: 0.85rem;
+    }
+
+    .reference-col li {
+      padding: 0.3rem 0;
+    }
+
+    .reference-col .rec {
+      color: var(--accent);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      header {
+        padding: 2rem 1rem 1.5rem;
+      }
+
+      main {
+        padding: 1.5rem 1rem 3rem;
+      }
+
+      .day-header {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .day-number {
+        font-size: 2rem;
+      }
+
+      .city-badge {
+        order: -1;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .legend {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+      }
+    }
+
+    /* Print styles */
+    @media print {
+      nav { display: none; }
+      .day-section { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Japan</h1>
+  <p>February 12–23, 2026</p>
+</header>
+
+<nav>
+  <ul>
+    <li><a href="#day1" data-city="tokyo">Day 1</a></li>
+    <li><a href="#day2" data-city="tokyo">Day 2</a></li>
+    <li><a href="#day3" data-city="tokyo">Day 3</a></li>
+    <li><a href="#day4" data-city="kyoto">Day 4</a></li>
+    <li><a href="#day5" data-city="kyoto">Day 5</a></li>
+    <li><a href="#day6" data-city="niseko">Day 6</a></li>
+    <li><a href="#day7" data-city="niseko">Day 7</a></li>
+    <li><a href="#day8" data-city="niseko">Day 8</a></li>
+    <li><a href="#day9" data-city="niseko">Day 9</a></li>
+    <li><a href="#day10" data-city="niseko">Day 10</a></li>
+    <li><a href="#day11" data-city="tokyo">Day 11</a></li>
+    <li><a href="#reference">Reference</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item">
+      <span class="legend-dot booked"></span>
+      <span>Booked / Confirmed</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-dot tobook"></span>
+      <span>Needs Booking</span>
+    </div>
+  </div>
+
+  <!-- DAY 1 -->
+  <section id="day1" class="day-section">
+    <div class="day-header">
+      <div class="day-number">01</div>
+      <div class="day-info">
+        <div class="day-date">Friday, February 13</div>
+        <div class="day-subtitle">Arrival Day</div>
+      </div>
+      <span class="city-badge tokyo">Tokyo</span>
+    </div>
+    
+    <div class="logistics-box">
+      <h4>Flight</h4>
+      <div class="logistics-row">
+        <div>
+          <span class="logistics-route">London Heathrow → Tokyo Haneda</span>
+          <span class="logistics-code">BA0005</span>
+        </div>
+        <div class="logistics-time">Dep Feb 12, 11:45 → Arr 10:25</div>
+      </div>
+    </div>
+
+    <div class="hotel-box">
+      <span class="hotel-name">EDITION Tokyo</span>
+      <span class="hotel-status">✓ Booked (3 nights)</span>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item booked">
+        <div class="timeline-time">10:25</div>
+        <div class="timeline-title">Arrive Tokyo Haneda</div>
+        <div class="timeline-desc">Immigration, bags, transfer to EDITION (~45 min)</div>
+        <span class="timeline-tag tag-transport">Transport</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">12:00–13:00</div>
+        <div class="timeline-title">Check in & freshen up</div>
+        <div class="timeline-desc">EDITION Tokyo</div>
+      </div>
+      <div class="timeline-item highlight">
+        <div class="timeline-time">13:30–14:30</div>
+        <div class="timeline-title">Tonkatsu Suzuki</div>
+        <div class="timeline-desc">Tokyo Station — excellent tonkatsu for first meal</div>
+        <span class="timeline-tag tag-food">Lunch</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">15:00–18:30</div>
+        <div class="timeline-title">Jiyugaoka</div>
+        <div class="timeline-desc">Boutique fashion, vintage stores, Little Nap Coffee Stand</div>
+        <span class="timeline-tag tag-explore">Explore</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">19:00–21:30</div>
+        <div class="timeline-title">Dinner</div>
+        <div class="timeline-desc">First night — keep it easy, pick somewhere near hotel</div>
+        <span class="timeline-tag tag-food">Dinner</span>
+        <span class="timeline-tag tag-tobook">To Book</span>
+      </div>
+    </div>
+    <div class="options-box">
+      <h4>Dinner Options — pick one</h4>
+      <div class="option-item">
+        <input type="checkbox" id="d1-opt1">
+        <label for="d1-opt1">Hotel restaurant or nearby — don't overthink it after long flight</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- DAY 2 -->
+  <section id="day2" class="day-section">
+    <div class="day-header">
+      <div class="day-number">02</div>
+      <div class="day-info">
+        <div class="day-date">Saturday, February 14</div>
+        <div class="day-subtitle">Valentine's Day ♥</div>
+      </div>
+      <span class="city-badge tokyo">Tokyo</span>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-time">08:30–11:30</div>
+        <div class="timeline-title">Meiji Jingu Shrine</div>
+        <div class="timeline-desc">Buy ema wooden plaques, write wishes with Ana, walk Yoyogi Park forest</div>
+        <span class="timeline-tag tag-explore">Explore</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">11:30–13:00</div>
+        <div class="timeline-title">Afuri Harajuku</div>
+        <div class="timeline-desc">Yuzu ramen — walk in, no reservation needed</div>
+        <span class="timeline-tag tag-food">Lunch</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">14:00–18:30</div>
+        <div class="timeline-title">Shimokitazawa</div>
+        <div class="timeline-desc">Vintage bohemian neighborhood, Pianola Records vinyl store</div>
+        <span class="timeline-tag tag-explore">Explore</span>
+      </div>
+      <div class="timeline-item booked">
+        <div class="timeline-time">20:00</div>
+        <div class="timeline-title">Sushi Masahi</div>
+        <div class="timeline-desc">Valentine's dinner</div>
+        <span class="timeline-tag tag-food">Dinner</span>
+        <span class="timeline-tag tag-tobook">To Book</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DAY 3 -->
+  <section id="day3" class="day-section">
+    <div class="day-header">
+      <div class="day-number">03</div>
+      <div class="day-info">
+        <div class="day-date">Sunday, February 15</div>
+        <div class="day-subtitle">Markets, Shopping & Nightlife</div>
+      </div>
+      <span class="city-badge tokyo">Tokyo</span>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item highlight">
+        <div class="timeline-time">08:00–10:30</div>
+        <div class="timeline-title">Tsukiji Outer Market</div>
+        <div class="timeline-desc">Wagyu Jyujyu, Tsukiji Shouro tamagoyaki, Onigiri Marutoyo — graze your way through</div>
+        <span class="timeline-tag tag-food">Breakfast/Brunch</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">11:00–13:00</div>
+        <div class="timeline-title">Koenji</div>
+        <div class="timeline-desc">Creative indie neighborhood, vintage/thrift stores</div>
+        <span class="timeline-tag tag-explore">Explore</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">14:00–18:00</div>
+        <div class="timeline-title">Omotesando → Cat Street → Shibuya</div>
+        <div class="timeline-desc">Cibone, SuRyo, Nakagawa Masashichi, Loft, Kihara. Then streetwear, Shibuya Crossing, Miyashita Park</div>
+        <span class="timeline-tag tag-explore">Explore</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">19:00–21:00</div>
+        <div class="timeline-title">Dinner</div>
+        <div class="timeline-desc">Shibuya area — stay flexible</div>
+        <span class="timeline-tag tag-food">Dinner</span>
+      </div>
+      <div class="timeline-item highlight">
+        <div class="timeline-time">21:30+</div>
+        <div class="timeline-title">Golden Gai</div>
+        <div class="timeline-desc">The Open Book or Albatross — tiny bars, big vibes</div>
+        <span class="timeline-tag tag-explore">Nightlife</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="city-divider"><span>Kyoto</span></div>
+
+  <!-- DAY 4 -->
+  <section id="day4" class="day-section">
+    <div class="day-header">
+      <div class="day-number">04</div>
+      <div class="day-info">
+        <div class="day-date">Monday, February 16</div>
+        <div class="day-subtitle">Tokyo → Kyoto</div>
+      </div>
+      <span class="city-badge kyoto">Kyoto</span>
+    </div>
+
+    <div class="logistics-box">
+      <h4>Train</h4>
+      <div class="logistics-row">
+        <div>
+          <span class="logistics-route">Tokyo Station → Kyoto Station</span>
+          <span class="logistics-code">Nozomi 61</span>
+        </div>
+        <div class="logistics-time">08:00 → 10:15 (2hr 15min)</div>
+      </div>
+    </div>
+
+    <div class="hotel-box">
+      <span class="hotel-name">Sowaka Ryokan</span>
+      <span class="hotel-status">✓ Booked (1 night)</span>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item booked">
+        <div class="timeline-time">08:00–10:15</div>
+        <div class="timeline-title">Shinkansen to Kyoto</div>
+        <div class="timeline-desc">Nozomi 61 from Tokyo Station</div>
+        <span class="timeline-tag tag-transport">Transport</span>
+        <span class="timeline-tag tag-booked">Booked</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">11:00–12:30</div>
+        <div class="timeline-title">Check in Sowaka Ryokan</div>
+        <div class="timeline-desc">Drop bags, freshen up</div>
+      </div>
+      <div class="timeline-item highlight">
+        <div class="timeline-time">13:00–14:30</div>
+        <div class="timeline-title">Izakaya Akatombo</div>
+        <div class="timeline-desc">Gion — local obanzai. Cash only, arrive early!</div>
+        <span class="timeline-tag tag-food">Lunch</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">14:30–17:00</div>
+        <div class="timeline-title">Gion & Higashiyama Walk</div>
+        <div class="timeline-desc">Yasaka Shrine, machiya houses, Ninen-zaka/Sannen-zaka slopes</div>
+        <span class="timeline-tag tag-explore">Explore</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">17:00–18:30</div>
+        <div class="timeline-title">Sowaka Ryokan</div>
+        <div class="timeline-desc">Sake bath, courtyard gardens, complimentary beverages</div>
+        <span class="timeline-tag tag-relax">Relax</span>
+      </div>
+      <div class="timeline-item highlight">
+        <div class="timeline-time">19:00–21:30</div>
+        <div class="timeline-title">Kyomachiya Obanzai Kohaku</div>
+        <div class="timeline-desc">Authentic local flavors</div>
+        <span class="timeline-tag tag-food">Dinner</span>
+        <span class="timeline-tag tag-tobook">To Book</span>
+      </div>
+    </div>
+    <div class="options-box">
+      <h4>Other Kyoto spots if time allows</h4>
+      <div class="option-item">
+        <input type="checkbox" id="d4-kinkaku">
+        <label for="d4-kinkaku"><strong>Kinkaku-ji</strong> — Golden Pavilion</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" id="d4-fushimi">
+        <label for="d4-fushimi"><strong>Fushimi Inari</strong> — Orange torii gates</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" id="d4-kiyomizu">
+        <label for="d4-kiyomizu"><strong>Kiyomizu-dera</strong> — Buddhist temple</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" id="d4-ryoanji">
+        <label for="d4-ryoanji"><strong>Ryoan-ji</strong> — Zen rock garden</label>
+      </div>
+      <p class="option-note">Note: Only 1 full day in Kyoto — pick 1-2 max, or save for next trip</p>
+    </div>
+  </section>
+
+  <!-- DAY 5 -->
+  <section id="day5" class="day-section">
+    <div class="day-header">
+      <div class="day-number">05</div>
+      <div class="day-info">
+        <div class="day-date">Tuesday, February 17</div>
+        <div class="day-subtitle">Kyoto → Niseko</div>
+      </div>
+      <span class="city-badge kyoto">Kyoto</span>
+    </div>
+
+    <div class="logistics-box">
+      <h4>Transport</h4>
+      <div class="logistics-row">
+        <div>
+          <span class="logistics-route">Kyoto → Kansai Airport</span>
+          <span class="logistics-code">JR Haruka</span>
+        </div>
+        <div class="logistics-time">11:00 → 12:15 (1hr 15min)</div>
+      </div>
+      <div class="logistics-row">
+        <div>
+          <span class="logistics-route">Osaka ITM → Sapporo CTS</span>
+          <span class="logistics-code">Japan Airlines</span>
+        </div>
+        <div class="logistics-time">15:00 → 16:45</div>
+      </div>
+      <div class="logistics-row">
+        <div>
+          <span class="logistics-route">Sapporo → Niseko</span>
+          <span class="logistics-code">Rental Car</span>
+        </div>
+        <div class="logistics-time">~3 hours drive</div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-time">08:00–09:30</div>
+        <div class="timeline-title">Breakfast at Sowaka</div>
+        <div class="timeline-desc">Morning walk around Gion if time</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">10:00</div>
+        <div class="timeline-title">Check out Sowaka</div>
+      </div>
+      <div class="timeline-item booked">
+        <div class="timeline-time">11:00–12:15</div>
+        <div class="timeline-title">JR Haruka Express</div>
+        <div class="timeline-desc">Kyoto → Kansai Airport</div>
+        <span class="timeline-tag tag-transport">Transport</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">12:15–14:30</div>
+        <div class="timeline-title">Kansai Airport</div>
+        <div class="timeline-desc">Lunch, relax before flight</div>
+      </div>
+      <div class="timeline-item booked">
+        <div class="timeline-time">15:00–16:45</div>
+        <div class="timeline-title">Flight to Sapporo</div>
+        <div class="timeline-desc">Osaka ITM → Sapporo CTS</div>
+        <span class="timeline-tag tag-transport">Transport</span>
+        <span class="timeline-tag tag-booked">Booked</span>
+      </div>
+      <div class="timeline-item booked">
+        <div class="timeline-time">17:00–20:00</div>
+        <div class="timeline-title">Drive to Niseko</div>
+        <div class="timeline-desc">Pick up rental car at New Chitose Airport, ~3 hours to Sansui</div>
+        <span class="timeline-tag tag-transport">Transport</span>
+        <span class="timeline-tag tag-booked">Car Booked</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">20:00</div>
+        <div class="timeline-title">Check in Sansui Niseko</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">20:30–22:00</div>
+        <div class="timeline-title">Easy dinner</div>
+        <div class="timeline-desc">You'll be tired — keep it simple</div>
+        <span class="timeline-tag tag-food">Dinner</span>
+      </div>
+    </div>
+    <div class="options-box">
+      <h4>Dinner — no stress, pick one</h4>
+      <div class="option-item">
+        <input type="checkbox" id="d5-ramen">
+        <label for="d5-ramen"><strong>Ramen Nakama</strong> — comforting, local, fast</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" id="d5-trucks">
+        <label for="d5-trucks"><strong>Hirafu Food Trucks</strong> (Seico Mart area) — casual, zero commitment</label>
+      </div>
+      <p class="option-note">Optional: One drink at Bar Gyu+ then early night</p>
+    </div>
+  </section>
+
+  <div class="city-divider"><span>Niseko</span></div>
+
+  <!-- DAY 6 -->
+  <section id="day6" class="day-section">
+    <div class="day-header">
+      <div class="day-number">06</div>
+      <div class="day-info">
+        <div class="day-date">Wednesday, February 18</div>
+        <div class="day-subtitle">First Ski Day</div>
+      </div>
+      <span class="city-badge niseko">Niseko</span>
+    </div>
+
+    <div class="hotel-box">
+      <span class="hotel-name">Sansui Niseko</span>
+      <span class="hotel-status">✓ Booked (5 nights)</span>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-time">07:30–08:30</div>
+        <div class="timeline-title">Breakfast + Gear up</div>
+      </div>
+      <div class="timeline-item booked">
+        <div class="timeline-time">08:30–16:00</div>
+        <div class="timeline-title">Snowboarding with Guide</div>
+        <div class="timeline-desc">Annupuri & Niseko Village — less hectic, great snow</div>
+        <span class="timeline-tag tag-ski">Ski</span>
+        <span class="timeline-tag tag-guide">With Guide</span>
+        <span class="timeline-tag tag-booked">Booked</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">12:30–13:30</div>
+        <div class="timeline-title">King Bell Hut</div>
+        <div class="timeline-desc">Mid-mountain — soup curry or noodles, essential Niseko experience</div>
+        <span class="timeline-tag tag-food">Lunch</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">17:00–18:30</div>
+        <div class="timeline-title">Onsen</div>
+        <div class="timeline-desc">Sansui in-room, or Ki Niseko / AYA Niseko</div>
+        <span class="timeline-tag tag-relax">Relax</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">19:00–21:00</div>
+        <div class="timeline-title">Dinner</div>
+        <div class="timeline-desc">First proper Niseko dinner</div>
+        <span class="timeline-tag tag-food">Dinner</span>
+        <span class="timeline-tag tag-tobook">To Book</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">21:00+</div>
+        <div class="timeline-title">Optional drinks</div>
+        <div class="timeline-desc">Casual around Hirafu</div>
+      </div>
+    </div>
+    <div class="options-box">
+      <h4>Dinner Options — pick one</h4>
+      <div class="option-item">
+        <input type="checkbox" id="d6-manmosu">
+        <label for="d6-manmosu"><strong>Sakaba Manmosu</strong> — izakaya, very Japanese, cozy. Tempura + sake.</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" id="d6-tempura">
+        <label for="d6-tempura"><strong>Tempura Araki</strong> — omakase tempura at Setsu</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" id="d6-akaru">
+        <label for="d6-akaru"><strong>Akaru</strong> — sushi, seasonal hot pots, oysters</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- DAY 7 -->
+  <section id="day7" class="day-section">
+    <div class="day-header">
+      <div class="day-number">07</div>
+      <div class="day-info">
+        <div class="day-date">Thursday, February 19</div>
+        <div class="day-subtitle">Big Day + Michelin Night ★</div>
+      </div>
+      <span class="city-badge niseko">Niseko</span>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item booked">
+        <div class="timeline-time">06:30–16:30</div>
+        <div class="timeline-title">Snowboarding with Guide — Long Day</div>
+        <div class="timeline-desc">Push yourselves, first tracks</div>
+        <span class="timeline-tag tag-ski">Ski</span>
+        <span class="timeline-tag tag-guide">With Guide</span>
+        <span class="timeline-tag tag-booked">Booked</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">12:30–13:30</div>
+        <div class="timeline-title">On-Mountain Lunch</div>
+        <div class="timeline-desc">Hanazono EDGE (snow crab ramen) or Yang Shu Ten</div>
+        <span class="timeline-tag tag-food">Lunch</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">17:00–18:30</div>
+        <div class="timeline-title">Annupuri Onsen</div>
+        <div class="timeline-desc">Yugokorotei or Iroha — worth the trip</div>
+        <span class="timeline-tag tag-relax">Relax</span>
+      </div>
+      <div class="timeline-item booked">
+        <div class="timeline-time">19:30–22:00</div>
+        <div class="timeline-title">KAMIMURA ★</div>
+        <div class="timeline-desc">Statement night — tasting menu + sake pairing. Taxi arranged by hotel.</div>
+        <span class="timeline-tag tag-food">Dinner</span>
+        <span class="timeline-tag tag-tobook">Must Book</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DAY 8 -->
+  <section id="day8" class="day-section">
+    <div class="day-header">
+      <div class="day-number">08</div>
+      <div class="day-info">
+        <div class="day-date">Friday, February 20</div>
+        <div class="day-subtitle">Special Experience Day</div>
+      </div>
+      <span class="city-badge niseko">Niseko</span>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item booked">
+        <div class="timeline-time">08:00–17:00</div>
+        <div class="timeline-title">Snowboarding with Guide</div>
+        <div class="timeline-desc">Regular ski day, or upgrade to cat skiing</div>
+        <span class="timeline-tag tag-ski">Ski</span>
+        <span class="timeline-tag tag-guide">With Guide</span>
+        <span class="timeline-tag tag-booked">Booked</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">12:30–13:30</div>
+        <div class="timeline-title">On-Mountain Lunch</div>
+        <span class="timeline-tag tag-food">Lunch</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">17:30–19:00</div>
+        <div class="timeline-title">Onsen</div>
+        <div class="timeline-desc">Rest up before dinner</div>
+        <span class="timeline-tag tag-relax">Relax</span>
+      </div>
+      <div class="timeline-item booked">
+        <div class="timeline-time">19:30–21:30</div>
+        <div class="timeline-title">MAME Niseko</div>
+        <div class="timeline-desc">Excellent Japanese cuisine</div>
+        <span class="timeline-tag tag-food">Dinner</span>
+        <span class="timeline-tag tag-booked">Booked</span>
+      </div>
+    </div>
+    <div class="options-box">
+      <h4>Upgrade Option</h4>
+      <div class="option-item">
+        <input type="checkbox" id="d8-cat">
+        <label for="d8-cat"><strong>Weiss Powder Cat Skiing</strong> — fresh tracks, mellow terrain, lunch included. Highly recommended!</label>
+      </div>
+      <p class="option-note">If doing cat skiing, you'll be tired but happy — MAME is a perfect calm dinner after</p>
+    </div>
+  </section>
+
+  <!-- DAY 9 -->
+  <section id="day9" class="day-section">
+    <div class="day-header">
+      <div class="day-number">09</div>
+      <div class="day-info">
+        <div class="day-date">Saturday, February 21</div>
+        <div class="day-subtitle">Final Ski Day</div>
+      </div>
+      <span class="city-badge niseko">Niseko</span>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item booked">
+        <div class="timeline-time">08:00–15:00</div>
+        <div class="timeline-title">Snowboarding with Guide — Final Day</div>
+        <div class="timeline-desc">Favorite runs, savor it. Shorter day before travel tomorrow.</div>
+        <span class="timeline-tag tag-ski">Ski</span>
+        <span class="timeline-tag tag-guide">With Guide</span>
+        <span class="timeline-tag tag-booked">Booked</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">12:30–13:30</div>
+        <div class="timeline-title">Bo-Yo-So</div>
+        <div class="timeline-desc">Hirafu slopes — quick, local favorite</div>
+        <span class="timeline-tag tag-food">Lunch</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">15:30–17:00</div>
+        <div class="timeline-title">Final après-ski</div>
+        <div class="timeline-desc">Drink in Hirafu, say goodbye to powder</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">17:30–19:00</div>
+        <div class="timeline-title">Onsen + Pack</div>
+        <span class="timeline-tag tag-relax">Relax</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">19:30–21:30</div>
+        <div class="timeline-title">Dinner — Last Night in Niseko</div>
+        <div class="timeline-desc">Perfect "last night" energy</div>
+        <span class="timeline-tag tag-food">Dinner</span>
+        <span class="timeline-tag tag-tobook">To Book</span>
+      </div>
+    </div>
+    <div class="options-box">
+      <h4>Dinner Options — pick one</h4>
+      <div class="option-item">
+        <input type="checkbox" id="d9-barn">
+        <label for="d9-barn"><strong>The Barn by Odin</strong> (Kutchan) — cozy, intimate, Japanese-European. Worth the taxi.</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" id="d9-soba">
+        <label for="d9-soba"><strong>Soba Kaiseki Ichimura</strong> — refined, comforting</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" id="d9-robata">
+        <label for="d9-robata"><strong>Robata Shimomura</strong> — premium robata, Hokkaido wagyu</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- DAY 10 -->
+  <section id="day10" class="day-section">
+    <div class="day-header">
+      <div class="day-number">10</div>
+      <div class="day-info">
+        <div class="day-date">Sunday, February 22</div>
+        <div class="day-subtitle">Niseko → Tokyo</div>
+      </div>
+      <span class="city-badge niseko">Niseko</span>
+    </div>
+
+    <div class="logistics-box">
+      <h4>Transport</h4>
+      <div class="logistics-row">
+        <div>
+          <span class="logistics-route">Niseko → Sapporo Airport</span>
+          <span class="logistics-code">Rental Car</span>
+        </div>
+        <div class="logistics-time">~3 hours (return car)</div>
+      </div>
+      <div class="logistics-row">
+        <div>
+          <span class="logistics-route">Sapporo CTS → Tokyo HND</span>
+          <span class="logistics-code">Japan Airlines</span>
+        </div>
+        <div class="logistics-time">17:00 → 18:45</div>
+      </div>
+    </div>
+
+    <div class="hotel-box">
+      <span class="hotel-name">TRUNK Hotel Yoyogi Park</span>
+      <span class="hotel-status">✓ Booked (1 night)</span>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-time">08:00–09:30</div>
+        <div class="timeline-title">Breakfast at Sansui</div>
+        <div class="timeline-desc">Last coffee, goodbye powder ❄️</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">09:30–10:30</div>
+        <div class="timeline-title">Pack & Check out</div>
+      </div>
+      <div class="timeline-item booked">
+        <div class="timeline-time">11:00–14:00</div>
+        <div class="timeline-title">Drive to Sapporo Airport</div>
+        <div class="timeline-desc">Return rental car at New Chitose — leave buffer time</div>
+        <span class="timeline-tag tag-transport">Transport</span>
+        <span class="timeline-tag tag-booked">Car Booked</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">14:00–16:30</div>
+        <div class="timeline-title">Sapporo Airport</div>
+        <div class="timeline-desc">Return car, check-in, quick lunch</div>
+      </div>
+      <div class="timeline-item booked">
+        <div class="timeline-time">17:00–18:45</div>
+        <div class="timeline-title">Flight to Tokyo</div>
+        <div class="timeline-desc">Sapporo CTS → Haneda HND</div>
+        <span class="timeline-tag tag-transport">Transport</span>
+        <span class="timeline-tag tag-booked">Booked</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">19:00–20:00</div>
+        <div class="timeline-title">Transfer to TRUNK Hotel</div>
+        <div class="timeline-desc">Yoyogi Park area (~30-45 min from Haneda)</div>
+        <span class="timeline-tag tag-transport">Transport</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">20:30–22:30</div>
+        <div class="timeline-title">Nakameguro Izakaya</div>
+        <div class="timeline-desc">Walk across Meguro River (15 min), pick a spot</div>
+        <span class="timeline-tag tag-food">Dinner</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="city-divider"><span>Departure</span></div>
+
+  <!-- DAY 11 -->
+  <section id="day11" class="day-section">
+    <div class="day-header">
+      <div class="day-number">11</div>
+      <div class="day-info">
+        <div class="day-date">Monday, February 23</div>
+        <div class="day-subtitle">Fly Home</div>
+      </div>
+      <span class="city-badge tokyo">Tokyo</span>
+    </div>
+
+    <div class="logistics-box">
+      <h4>Flights</h4>
+      <div class="logistics-row">
+        <div>
+          <span class="logistics-route">Tokyo Narita → Frankfurt</span>
+          <span class="logistics-code">BA4601</span>
+        </div>
+        <div class="logistics-time">10:45 departure</div>
+      </div>
+      <div class="logistics-row">
+        <div>
+          <span class="logistics-route">Frankfurt → London</span>
+          <span class="logistics-code">BA8737</span>
+        </div>
+        <div class="logistics-time">20:10 → Evening</div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-time">06:00</div>
+        <div class="timeline-title">TRUNK Hotel checkout</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">06:30–08:30</div>
+        <div class="timeline-title">Transfer to Narita</div>
+        <div class="timeline-desc">~1.5–2 hours depending on traffic</div>
+        <span class="timeline-tag tag-transport">Transport</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">08:30–10:30</div>
+        <div class="timeline-title">Narita Airport</div>
+        <div class="timeline-desc">Check-in, security, last souvenirs</div>
+      </div>
+      <div class="timeline-item booked">
+        <div class="timeline-time">10:45</div>
+        <div class="timeline-title">BA4601 → Frankfurt</div>
+        <span class="timeline-tag tag-transport">Transport</span>
+        <span class="timeline-tag tag-booked">Booked</span>
+      </div>
+      <div class="timeline-item booked">
+        <div class="timeline-time">20:10</div>
+        <div class="timeline-title">BA8737 → London</div>
+        <span class="timeline-tag tag-transport">Transport</span>
+        <span class="timeline-tag tag-booked">Booked</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">Evening</div>
+        <div class="timeline-title">Arrive London</div>
+        <div class="timeline-desc">Welcome home 🏠</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NISEKO REFERENCE -->
+  <section id="reference" class="reference-section">
+    <div class="reference-header">Niseko Quick Reference</div>
+    <div class="reference-grid">
+      <div class="reference-col">
+        <h4>Top Dinners</h4>
+        <ul>
+          <li class="rec">★ Kamimura (Michelin)</li>
+          <li class="rec">★ MAME Niseko</li>
+          <li class="rec">★ The Barn by Odin</li>
+          <li>Soba Kaiseki Ichimura</li>
+          <li>Sakaba Manmosu (izakaya)</li>
+          <li>Tempura Araki</li>
+          <li>Méli Mélo (French-Italian)</li>
+          <li>Akaru (sushi, oysters)</li>
+          <li>Robata Shimomura</li>
+          <li>Shabu Shabu Mori</li>
+        </ul>
+      </div>
+      <div class="reference-col">
+        <h4>On-Mountain Lunch</h4>
+        <ul>
+          <li class="rec">★ King Bell Hut (curry)</li>
+          <li>Hanazono EDGE</li>
+          <li>Yang Shu Ten</li>
+          <li>Bo-Yo-So</li>
+        </ul>
+        <h4 style="margin-top:1rem;">Bars</h4>
+        <ul>
+          <li class="rec">★ Gyu+ Bar (fridge door)</li>
+          <li>Bar Gyu</li>
+          <li>Musu Bar (speakeasy)</li>
+        </ul>
+      </div>
+      <div class="reference-col">
+        <h4>Onsen</h4>
+        <ul>
+          <li>Sansui (in-room)</li>
+          <li>Ki Niseko</li>
+          <li>AYA Niseko</li>
+          <li>Aspect Niseko</li>
+          <li class="rec">★ Annupuri Onsen</li>
+        </ul>
+        <h4 style="margin-top:1rem;">Activities</h4>
+        <ul>
+          <li class="rec">★ Weiss Cat Skiing</li>
+          <li>Night skiing (Annupuri)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // Highlight current day in nav on scroll
+  const sections = document.querySelectorAll('.day-section, .reference-section');
+  const navLinks = document.querySelectorAll('nav a');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const activeLink = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+        if (activeLink) activeLink.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  
+  sections.forEach(section => observer.observe(section));
+</script>
+
+</body>
+</html>
