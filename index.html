@@ -57,10 +57,58 @@
       text-transform: uppercase;
     }
 
+    /* Sync Banner */
+    .sync-banner {
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      border-bottom: 1px solid #86efac;
+      padding: 0.6rem 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+
+    .sync-banner.offline {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-color: #f59e0b;
+    }
+
+    .sync-banner.syncing {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      border-color: #38bdf8;
+    }
+
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--booked);
+      animation: pulse 2s infinite;
+    }
+
+    .sync-banner.offline .sync-dot {
+      background: var(--tobook);
+      animation: none;
+    }
+
+    .sync-banner.syncing .sync-dot {
+      background: #0ea5e9;
+      animation: pulse 0.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
     /* Navigation */
     nav {
       position: sticky;
-      top: 0;
+      top: 36px;
       background: var(--paper);
       border-bottom: 1px solid var(--mist);
       z-index: 100;
@@ -113,12 +161,14 @@
       display: flex;
       gap: 1.5rem;
       justify-content: center;
+      align-items: center;
       padding: 1rem;
       margin-bottom: 2rem;
       background: var(--card);
       border: 1px solid var(--mist);
       border-radius: 8px;
       font-size: 0.85rem;
+      flex-wrap: wrap;
     }
 
     .legend-item {
@@ -135,6 +185,12 @@
 
     .legend-dot.booked { background: var(--booked); }
     .legend-dot.tobook { background: var(--tobook); }
+
+    .legend-tip {
+      color: var(--stone);
+      font-size: 0.8rem;
+      font-style: italic;
+    }
 
     /* Day Sections */
     .day-section {
@@ -228,8 +284,14 @@
       background: var(--ink);
     }
 
-    .timeline-item.booked::before {
+    .timeline-item[data-status="booked"]::before {
       background: var(--booked);
+      width: 9px;
+      height: 9px;
+    }
+
+    .timeline-item[data-status="tobook"]::before {
+      background: var(--tobook);
       width: 9px;
       height: 9px;
     }
@@ -250,6 +312,41 @@
       color: var(--stone);
     }
 
+    /* Editable fields */
+    .editable {
+      cursor: text;
+      border-radius: 3px;
+      transition: background 0.2s;
+      min-width: 20px;
+      display: inline-block;
+    }
+
+    .editable:hover {
+      background: rgba(0,0,0,0.05);
+    }
+
+    .editable:focus {
+      outline: none;
+      background: #fff3cd;
+    }
+
+    .editable.synced {
+      animation: syncFlash 0.5s ease;
+    }
+
+    @keyframes syncFlash {
+      0% { background: #bbf7d0; }
+      100% { background: transparent; }
+    }
+
+    /* Tags */
+    .timeline-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-top: 0.35rem;
+    }
+
     .timeline-tag {
       display: inline-block;
       font-size: 0.7rem;
@@ -257,8 +354,6 @@
       letter-spacing: 0.05em;
       padding: 0.15rem 0.5rem;
       border-radius: 3px;
-      margin-top: 0.35rem;
-      margin-right: 0.25rem;
     }
 
     .tag-food { background: #fef3e2; color: #b45309; }
@@ -266,9 +361,34 @@
     .tag-transport { background: #f3f4f6; color: #4b5563; }
     .tag-ski { background: #dbeafe; color: #1d4ed8; }
     .tag-relax { background: #fce7f3; color: #be185d; }
-    .tag-booked { background: #dcfce7; color: #15803d; font-weight: 600; }
-    .tag-tobook { background: #fef3c7; color: #b45309; font-weight: 600; }
     .tag-guide { background: #ede9fe; color: #6d28d9; }
+
+    /* Status Tag - Clickable */
+    .tag-status {
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s;
+    }
+
+    .tag-status:hover {
+      transform: scale(1.05);
+    }
+
+    .tag-status:active {
+      transform: scale(0.95);
+    }
+
+    .tag-status.booked {
+      background: #dcfce7;
+      color: #15803d;
+      font-weight: 600;
+    }
+
+    .tag-status.tobook {
+      background: #fef3c7;
+      color: #b45309;
+      font-weight: 600;
+    }
 
     /* Logistics Box */
     .logistics-box {
@@ -349,10 +469,16 @@
     .option-item input[type="checkbox"] {
       margin-top: 0.25rem;
       accent-color: var(--accent);
+      cursor: pointer;
     }
 
     .option-item label {
       cursor: pointer;
+    }
+
+    .option-item.checked label {
+      text-decoration: line-through;
+      color: var(--stone);
     }
 
     .option-note {
@@ -461,6 +587,36 @@
       color: var(--accent);
     }
 
+    /* Notes section */
+    .notes-section {
+      background: var(--card);
+      border: 1px solid var(--mist);
+      border-radius: 12px;
+      margin-top: 2rem;
+      padding: 1.25rem;
+    }
+
+    .notes-section h3 {
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .notes-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      border: 1px solid var(--mist);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      resize: vertical;
+    }
+
+    .notes-textarea:focus {
+      outline: none;
+      border-color: var(--ink);
+    }
+
     /* Responsive */
     @media (max-width: 600px) {
       header {
@@ -496,7 +652,7 @@
 
     /* Print styles */
     @media print {
-      nav { display: none; }
+      nav, .sync-banner { display: none; }
       .day-section { break-inside: avoid; }
     }
   </style>
@@ -507,6 +663,11 @@
   <h1>Japan</h1>
   <p>February 12–23, 2026</p>
 </header>
+
+<div class="sync-banner" id="sync-banner">
+  <span class="sync-dot"></span>
+  <span id="sync-status">Connecting...</span>
+</div>
 
 <nav>
   <ul>
@@ -531,12 +692,13 @@
   <div class="legend">
     <div class="legend-item">
       <span class="legend-dot booked"></span>
-      <span>Booked / Confirmed</span>
+      <span>Booked</span>
     </div>
     <div class="legend-item">
       <span class="legend-dot tobook"></span>
-      <span>Needs Booking</span>
+      <span>To Book</span>
     </div>
+    <span class="legend-tip">Click to edit • Changes sync in real-time</span>
   </div>
 
   <!-- DAY 1 -->
@@ -567,42 +729,44 @@
     </div>
 
     <div class="timeline">
-      <div class="timeline-item booked">
+      <div class="timeline-item" data-status="booked" data-id="d1-arrive">
         <div class="timeline-time">10:25</div>
-        <div class="timeline-title">Arrive Tokyo Haneda</div>
-        <div class="timeline-desc">Immigration, bags, transfer to EDITION (~45 min)</div>
-        <span class="timeline-tag tag-transport">Transport</span>
+        <div class="timeline-title editable" contenteditable="true" data-field="d1-arrive-title">Arrive Tokyo Haneda</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d1-arrive-desc">Immigration, bags, transfer to EDITION (~45 min)</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-transport">Transport</span>
+          <span class="timeline-tag tag-status booked" data-id="d1-arrive" onclick="toggleStatus(this)">Booked</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">12:00–13:00</div>
-        <div class="timeline-title">Check in & freshen up</div>
-        <div class="timeline-desc">EDITION Tokyo</div>
+      <div class="timeline-item" data-id="d1-checkin">
+        <div class="timeline-time editable" contenteditable="true" data-field="d1-checkin-time">12:00–13:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d1-checkin-title">Check in & freshen up</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d1-checkin-desc">EDITION Tokyo</div>
       </div>
-      <div class="timeline-item highlight">
-        <div class="timeline-time">13:30–14:30</div>
-        <div class="timeline-title">Tonkatsu Suzuki</div>
-        <div class="timeline-desc">Tokyo Station — excellent tonkatsu for first meal</div>
-        <span class="timeline-tag tag-food">Lunch</span>
+      <div class="timeline-item highlight" data-status="booked" data-id="d1-lunch">
+        <div class="timeline-time editable" contenteditable="true" data-field="d1-lunch-time">13:30–14:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d1-lunch-title">Tonkatsu Suzuki</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d1-lunch-desc">Tokyo Station — excellent tonkatsu for first meal</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Lunch</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">15:00–18:30</div>
-        <div class="timeline-title">Jiyugaoka</div>
-        <div class="timeline-desc">Boutique fashion, vintage stores, Little Nap Coffee Stand</div>
-        <span class="timeline-tag tag-explore">Explore</span>
+      <div class="timeline-item" data-id="d1-jiyugaoka">
+        <div class="timeline-time editable" contenteditable="true" data-field="d1-jiyugaoka-time">15:00–18:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d1-jiyugaoka-title">Jiyugaoka</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d1-jiyugaoka-desc">Boutique fashion, vintage stores, Little Nap Coffee Stand</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-explore">Explore</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">19:00–21:30</div>
-        <div class="timeline-title">Dinner</div>
-        <div class="timeline-desc">First night — keep it easy, pick somewhere near hotel</div>
-        <span class="timeline-tag tag-food">Dinner</span>
-        <span class="timeline-tag tag-tobook">To Book</span>
-      </div>
-    </div>
-    <div class="options-box">
-      <h4>Dinner Options — pick one</h4>
-      <div class="option-item">
-        <input type="checkbox" id="d1-opt1">
-        <label for="d1-opt1">Hotel restaurant or nearby — don't overthink it after long flight</label>
+      <div class="timeline-item" data-status="tobook" data-id="d1-dinner">
+        <div class="timeline-time editable" contenteditable="true" data-field="d1-dinner-time">19:00–21:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d1-dinner-title">Dinner</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d1-dinner-desc">First night — keep it easy, pick somewhere near hotel</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Dinner</span>
+          <span class="timeline-tag tag-status tobook" data-id="d1-dinner" onclick="toggleStatus(this)">To Book</span>
+        </div>
       </div>
     </div>
   </section>
@@ -618,30 +782,38 @@
       <span class="city-badge tokyo">Tokyo</span>
     </div>
     <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-time">08:30–11:30</div>
-        <div class="timeline-title">Meiji Jingu Shrine</div>
-        <div class="timeline-desc">Buy ema wooden plaques, write wishes with Ana, walk Yoyogi Park forest</div>
-        <span class="timeline-tag tag-explore">Explore</span>
+      <div class="timeline-item" data-id="d2-meiji">
+        <div class="timeline-time editable" contenteditable="true" data-field="d2-meiji-time">08:30–11:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d2-meiji-title">Meiji Jingu Shrine</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d2-meiji-desc">Buy ema wooden plaques, write wishes with Ana, walk Yoyogi Park forest</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-explore">Explore</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">11:30–13:00</div>
-        <div class="timeline-title">Afuri Harajuku</div>
-        <div class="timeline-desc">Yuzu ramen — walk in, no reservation needed</div>
-        <span class="timeline-tag tag-food">Lunch</span>
+      <div class="timeline-item" data-id="d2-lunch">
+        <div class="timeline-time editable" contenteditable="true" data-field="d2-lunch-time">11:30–13:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d2-lunch-title">Afuri Harajuku</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d2-lunch-desc">Yuzu ramen — walk in, no reservation needed</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Lunch</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">14:00–18:30</div>
-        <div class="timeline-title">Shimokitazawa</div>
-        <div class="timeline-desc">Vintage bohemian neighborhood, Pianola Records vinyl store</div>
-        <span class="timeline-tag tag-explore">Explore</span>
+      <div class="timeline-item" data-id="d2-shimokita">
+        <div class="timeline-time editable" contenteditable="true" data-field="d2-shimokita-time">14:00–18:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d2-shimokita-title">Shimokitazawa</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d2-shimokita-desc">Vintage bohemian neighborhood, Pianola Records vinyl store</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-explore">Explore</span>
+        </div>
       </div>
-      <div class="timeline-item booked">
-        <div class="timeline-time">20:00</div>
-        <div class="timeline-title">Sushi Masahi</div>
-        <div class="timeline-desc">Valentine's dinner</div>
-        <span class="timeline-tag tag-food">Dinner</span>
-        <span class="timeline-tag tag-tobook">Booked</span>
+      <div class="timeline-item highlight" data-status="booked" data-id="d2-dinner">
+        <div class="timeline-time editable" contenteditable="true" data-field="d2-dinner-time">20:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d2-dinner-title">Sushi Masahi</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d2-dinner-desc">Valentine's dinner</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Dinner</span>
+          <span class="timeline-tag tag-status booked" data-id="d2-dinner" onclick="toggleStatus(this)">Booked</span>
+        </div>
       </div>
     </div>
   </section>
@@ -657,35 +829,45 @@
       <span class="city-badge tokyo">Tokyo</span>
     </div>
     <div class="timeline">
-      <div class="timeline-item highlight">
-        <div class="timeline-time">08:00–10:30</div>
-        <div class="timeline-title">Tsukiji Outer Market</div>
-        <div class="timeline-desc">Wagyu Jyujyu, Tsukiji Shouro tamagoyaki, Onigiri Marutoyo — graze your way through</div>
-        <span class="timeline-tag tag-food">Breakfast/Brunch</span>
+      <div class="timeline-item highlight" data-id="d3-tsukiji">
+        <div class="timeline-time editable" contenteditable="true" data-field="d3-tsukiji-time">08:00–10:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d3-tsukiji-title">Tsukiji Outer Market</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d3-tsukiji-desc">Wagyu Jyujyu, Tsukiji Shouro tamagoyaki, Onigiri Marutoyo — graze your way through</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Breakfast/Brunch</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">11:00–13:00</div>
-        <div class="timeline-title">Koenji</div>
-        <div class="timeline-desc">Creative indie neighborhood, vintage/thrift stores</div>
-        <span class="timeline-tag tag-explore">Explore</span>
+      <div class="timeline-item" data-id="d3-koenji">
+        <div class="timeline-time editable" contenteditable="true" data-field="d3-koenji-time">11:00–13:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d3-koenji-title">Koenji</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d3-koenji-desc">Creative indie neighborhood, vintage/thrift stores</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-explore">Explore</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">14:00–18:00</div>
-        <div class="timeline-title">Omotesando → Cat Street → Shibuya</div>
-        <div class="timeline-desc">Cibone, SuRyo, Nakagawa Masashichi, Loft, Kihara. Then streetwear, Shibuya Crossing, Miyashita Park</div>
-        <span class="timeline-tag tag-explore">Explore</span>
+      <div class="timeline-item" data-id="d3-omotesando">
+        <div class="timeline-time editable" contenteditable="true" data-field="d3-omotesando-time">14:00–18:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d3-omotesando-title">Omotesando → Cat Street → Shibuya</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d3-omotesando-desc">Cibone, SuRyo, Nakagawa Masashichi, Loft, Kihara. Then streetwear, Shibuya Crossing, Miyashita Park</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-explore">Explore</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">19:00–21:00</div>
-        <div class="timeline-title">Dinner</div>
-        <div class="timeline-desc">Shibuya area — stay flexible</div>
-        <span class="timeline-tag tag-food">Dinner</span>
+      <div class="timeline-item" data-id="d3-dinner">
+        <div class="timeline-time editable" contenteditable="true" data-field="d3-dinner-time">19:00–21:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d3-dinner-title">Dinner</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d3-dinner-desc">Shibuya area — stay flexible</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Dinner</span>
+        </div>
       </div>
-      <div class="timeline-item highlight">
-        <div class="timeline-time">21:30+</div>
-        <div class="timeline-title">Golden Gai</div>
-        <div class="timeline-desc">The Open Book or Albatross — tiny bars, big vibes</div>
-        <span class="timeline-tag tag-explore">Nightlife</span>
+      <div class="timeline-item highlight" data-id="d3-goldengai">
+        <div class="timeline-time editable" contenteditable="true" data-field="d3-goldengai-time">21:30+</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d3-goldengai-title">Golden Gai</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d3-goldengai-desc">The Open Book or Albatross — tiny bars, big vibes</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-explore">Nightlife</span>
+        </div>
       </div>
     </div>
   </section>
@@ -720,60 +902,71 @@
     </div>
 
     <div class="timeline">
-      <div class="timeline-item booked">
+      <div class="timeline-item" data-status="booked" data-id="d4-train">
         <div class="timeline-time">08:00–10:15</div>
-        <div class="timeline-title">Shinkansen to Kyoto</div>
-        <div class="timeline-desc">Nozomi 61 from Tokyo Station</div>
-        <span class="timeline-tag tag-transport">Transport</span>
-        <span class="timeline-tag tag-booked">Booked</span>
+        <div class="timeline-title editable" contenteditable="true" data-field="d4-train-title">Shinkansen to Kyoto</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d4-train-desc">Nozomi 61 from Tokyo Station</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-transport">Transport</span>
+          <span class="timeline-tag tag-status booked" data-id="d4-train" onclick="toggleStatus(this)">Booked</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">11:00–12:30</div>
-        <div class="timeline-title">Check in Sowaka Ryokan</div>
-        <div class="timeline-desc">Drop bags, freshen up</div>
+      <div class="timeline-item" data-id="d4-checkin">
+        <div class="timeline-time editable" contenteditable="true" data-field="d4-checkin-time">11:00–12:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d4-checkin-title">Check in Sowaka Ryokan</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d4-checkin-desc">Drop bags, freshen up</div>
       </div>
-      <div class="timeline-item highlight">
-        <div class="timeline-time">13:00–14:30</div>
-        <div class="timeline-title">Izakaya Akatombo</div>
-        <div class="timeline-desc">Gion — local obanzai. Cash only, arrive early!</div>
-        <span class="timeline-tag tag-food">Lunch</span>
+      <div class="timeline-item highlight" data-status="tobook" data-id="d4-lunch">
+        <div class="timeline-time editable" contenteditable="true" data-field="d4-lunch-time">12:30–14:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d4-lunch-title">Gion Loka (at Sowaka)</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d4-lunch-desc">5-course lunch — ask hotel to book when you check in</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Lunch</span>
+          <span class="timeline-tag tag-status tobook" data-id="d4-lunch" onclick="toggleStatus(this)">To Book</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">14:30–17:00</div>
-        <div class="timeline-title">Gion & Higashiyama Walk</div>
-        <div class="timeline-desc">Yasaka Shrine, machiya houses, Ninen-zaka/Sannen-zaka slopes</div>
-        <span class="timeline-tag tag-explore">Explore</span>
+      <div class="timeline-item" data-id="d4-walk">
+        <div class="timeline-time editable" contenteditable="true" data-field="d4-walk-time">14:30–17:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d4-walk-title">Gion & Higashiyama Walk</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d4-walk-desc">Yasaka Shrine, machiya houses, Ninen-zaka/Sannen-zaka slopes</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-explore">Explore</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">17:00–18:30</div>
-        <div class="timeline-title">Sowaka Ryokan</div>
-        <div class="timeline-desc">Sake bath, courtyard gardens, complimentary beverages</div>
-        <span class="timeline-tag tag-relax">Relax</span>
+      <div class="timeline-item" data-id="d4-relax">
+        <div class="timeline-time editable" contenteditable="true" data-field="d4-relax-time">17:00–18:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d4-relax-title">Sowaka Ryokan</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d4-relax-desc">Sake bath, courtyard gardens, complimentary beverages</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-relax">Relax</span>
+        </div>
       </div>
-      <div class="timeline-item highlight">
-        <div class="timeline-time">19:00–21:30</div>
-        <div class="timeline-title">Kyomachiya Obanzai Kohaku</div>
-        <div class="timeline-desc">Authentic local flavors</div>
-        <span class="timeline-tag tag-food">Dinner</span>
-        <span class="timeline-tag tag-tobook">To Book</span>
+      <div class="timeline-item highlight" data-status="booked" data-id="d4-dinner">
+        <div class="timeline-time editable" contenteditable="true" data-field="d4-dinner-time">19:00–21:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d4-dinner-title">Kyomachiya Obanzai Kohaku</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d4-dinner-desc">Traditional obanzai in 100-year-old machiya — Pontocho area</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Dinner</span>
+          <span class="timeline-tag tag-status booked" data-id="d4-dinner" onclick="toggleStatus(this)">Booked</span>
+        </div>
       </div>
     </div>
     <div class="options-box">
       <h4>Other Kyoto spots if time allows</h4>
-      <div class="option-item">
-        <input type="checkbox" id="d4-kinkaku">
+      <div class="option-item" data-option="d4-kinkaku">
+        <input type="checkbox" id="d4-kinkaku" onchange="toggleOption(this)">
         <label for="d4-kinkaku"><strong>Kinkaku-ji</strong> — Golden Pavilion</label>
       </div>
-      <div class="option-item">
-        <input type="checkbox" id="d4-fushimi">
+      <div class="option-item" data-option="d4-fushimi">
+        <input type="checkbox" id="d4-fushimi" onchange="toggleOption(this)">
         <label for="d4-fushimi"><strong>Fushimi Inari</strong> — Orange torii gates</label>
       </div>
-      <div class="option-item">
-        <input type="checkbox" id="d4-kiyomizu">
+      <div class="option-item" data-option="d4-kiyomizu">
+        <input type="checkbox" id="d4-kiyomizu" onchange="toggleOption(this)">
         <label for="d4-kiyomizu"><strong>Kiyomizu-dera</strong> — Buddhist temple</label>
       </div>
-      <div class="option-item">
-        <input type="checkbox" id="d4-ryoanji">
+      <div class="option-item" data-option="d4-ryoanji">
+        <input type="checkbox" id="d4-ryoanji" onchange="toggleOption(this)">
         <label for="d4-ryoanji"><strong>Ryoan-ji</strong> — Zen rock garden</label>
       </div>
       <p class="option-note">Note: Only 1 full day in Kyoto — pick 1-2 max, or save for next trip</p>
@@ -810,66 +1003,74 @@
       <div class="logistics-row">
         <div>
           <span class="logistics-route">Sapporo → Niseko</span>
-          <span class="logistics-code">Rental Car</span>
+          <span class="logistics-code">Rental Car ✓</span>
         </div>
         <div class="logistics-time">~3 hours drive</div>
       </div>
     </div>
 
     <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-time">08:00–09:30</div>
-        <div class="timeline-title">Breakfast at Sowaka</div>
-        <div class="timeline-desc">Morning walk around Gion if time</div>
+      <div class="timeline-item" data-id="d5-breakfast">
+        <div class="timeline-time editable" contenteditable="true" data-field="d5-breakfast-time">08:00–09:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d5-breakfast-title">Breakfast at Sowaka</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d5-breakfast-desc">Morning walk around Gion if time</div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" data-id="d5-checkout">
         <div class="timeline-time">10:00</div>
         <div class="timeline-title">Check out Sowaka</div>
       </div>
-      <div class="timeline-item booked">
+      <div class="timeline-item" data-status="booked" data-id="d5-haruka">
         <div class="timeline-time">11:00–12:15</div>
-        <div class="timeline-title">JR Haruka Express</div>
-        <div class="timeline-desc">Kyoto → Kansai Airport</div>
-        <span class="timeline-tag tag-transport">Transport</span>
+        <div class="timeline-title editable" contenteditable="true" data-field="d5-haruka-title">JR Haruka Express</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d5-haruka-desc">Kyoto → Kansai Airport</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-transport">Transport</span>
+        </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" data-id="d5-airport1">
         <div class="timeline-time">12:15–14:30</div>
-        <div class="timeline-title">Kansai Airport</div>
-        <div class="timeline-desc">Lunch, relax before flight</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d5-airport1-title">Kansai Airport</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d5-airport1-desc">Lunch, relax before flight</div>
       </div>
-      <div class="timeline-item booked">
+      <div class="timeline-item" data-status="booked" data-id="d5-flight">
         <div class="timeline-time">15:00–16:45</div>
-        <div class="timeline-title">Flight to Sapporo</div>
-        <div class="timeline-desc">Osaka ITM → Sapporo CTS</div>
-        <span class="timeline-tag tag-transport">Transport</span>
-        <span class="timeline-tag tag-booked">Booked</span>
+        <div class="timeline-title editable" contenteditable="true" data-field="d5-flight-title">Flight to Sapporo</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d5-flight-desc">Osaka ITM → Sapporo CTS</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-transport">Transport</span>
+          <span class="timeline-tag tag-status booked" data-id="d5-flight" onclick="toggleStatus(this)">Booked</span>
+        </div>
       </div>
-      <div class="timeline-item booked">
+      <div class="timeline-item" data-status="booked" data-id="d5-drive">
         <div class="timeline-time">17:00–20:00</div>
-        <div class="timeline-title">Drive to Niseko</div>
-        <div class="timeline-desc">Pick up rental car at New Chitose Airport, ~3 hours to Sansui</div>
-        <span class="timeline-tag tag-transport">Transport</span>
-        <span class="timeline-tag tag-booked">Car Booked</span>
+        <div class="timeline-title editable" contenteditable="true" data-field="d5-drive-title">Drive to Niseko</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d5-drive-desc">Pick up rental car at New Chitose Airport, ~3 hours to Sansui</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-transport">Transport</span>
+          <span class="timeline-tag tag-status booked" data-id="d5-drive" onclick="toggleStatus(this)">Car Booked</span>
+        </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" data-id="d5-checkin">
         <div class="timeline-time">20:00</div>
         <div class="timeline-title">Check in Sansui Niseko</div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">20:30–22:00</div>
-        <div class="timeline-title">Easy dinner</div>
-        <div class="timeline-desc">You'll be tired — keep it simple</div>
-        <span class="timeline-tag tag-food">Dinner</span>
+      <div class="timeline-item" data-id="d5-dinner">
+        <div class="timeline-time editable" contenteditable="true" data-field="d5-dinner-time">20:30–22:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d5-dinner-title">Easy dinner</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d5-dinner-desc">You'll be tired — keep it simple</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Dinner</span>
+        </div>
       </div>
     </div>
     <div class="options-box">
       <h4>Dinner — no stress, pick one</h4>
-      <div class="option-item">
-        <input type="checkbox" id="d5-ramen">
+      <div class="option-item" data-option="d5-ramen">
+        <input type="checkbox" id="d5-ramen" onchange="toggleOption(this)">
         <label for="d5-ramen"><strong>Ramen Nakama</strong> — comforting, local, fast</label>
       </div>
-      <div class="option-item">
-        <input type="checkbox" id="d5-trucks">
+      <div class="option-item" data-option="d5-trucks">
+        <input type="checkbox" id="d5-trucks" onchange="toggleOption(this)">
         <label for="d5-trucks"><strong>Hirafu Food Trucks</strong> (Seico Mart area) — casual, zero commitment</label>
       </div>
       <p class="option-note">Optional: One drink at Bar Gyu+ then early night</p>
@@ -895,55 +1096,63 @@
     </div>
 
     <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-time">07:30–08:30</div>
-        <div class="timeline-title">Breakfast + Gear up</div>
+      <div class="timeline-item" data-id="d6-breakfast">
+        <div class="timeline-time editable" contenteditable="true" data-field="d6-breakfast-time">07:30–08:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d6-breakfast-title">Breakfast + Gear up</div>
       </div>
-      <div class="timeline-item booked">
-        <div class="timeline-time">08:30–16:00</div>
-        <div class="timeline-title">Snowboarding with Guide</div>
-        <div class="timeline-desc">Annupuri & Niseko Village — less hectic, great snow</div>
-        <span class="timeline-tag tag-ski">Ski</span>
-        <span class="timeline-tag tag-guide">With Guide</span>
-        <span class="timeline-tag tag-booked">Booked</span>
+      <div class="timeline-item highlight" data-status="booked" data-id="d6-ski">
+        <div class="timeline-time editable" contenteditable="true" data-field="d6-ski-time">08:30–16:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d6-ski-title">Snowboarding with Guide</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d6-ski-desc">Annupuri & Niseko Village — less hectic, great snow</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-ski">Ski</span>
+          <span class="timeline-tag tag-guide">With Guide</span>
+          <span class="timeline-tag tag-status booked" data-id="d6-ski" onclick="toggleStatus(this)">Booked</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">12:30–13:30</div>
-        <div class="timeline-title">King Bell Hut</div>
-        <div class="timeline-desc">Mid-mountain — soup curry or noodles, essential Niseko experience</div>
-        <span class="timeline-tag tag-food">Lunch</span>
+      <div class="timeline-item" data-id="d6-lunch">
+        <div class="timeline-time editable" contenteditable="true" data-field="d6-lunch-time">12:30–13:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d6-lunch-title">King Bell Hut</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d6-lunch-desc">Mid-mountain — soup curry or noodles, essential Niseko experience</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Lunch</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">17:00–18:30</div>
-        <div class="timeline-title">Onsen</div>
-        <div class="timeline-desc">Sansui in-room, or Ki Niseko / AYA Niseko</div>
-        <span class="timeline-tag tag-relax">Relax</span>
+      <div class="timeline-item" data-id="d6-onsen">
+        <div class="timeline-time editable" contenteditable="true" data-field="d6-onsen-time">17:00–18:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d6-onsen-title">Onsen</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d6-onsen-desc">Sansui in-room, or Ki Niseko / AYA Niseko</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-relax">Relax</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">19:00–21:00</div>
-        <div class="timeline-title">Dinner</div>
-        <div class="timeline-desc">First proper Niseko dinner</div>
-        <span class="timeline-tag tag-food">Dinner</span>
-        <span class="timeline-tag tag-tobook">To Book</span>
+      <div class="timeline-item" data-status="tobook" data-id="d6-dinner">
+        <div class="timeline-time editable" contenteditable="true" data-field="d6-dinner-time">19:00–21:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d6-dinner-title">Dinner</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d6-dinner-desc">First proper Niseko dinner</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Dinner</span>
+          <span class="timeline-tag tag-status tobook" data-id="d6-dinner" onclick="toggleStatus(this)">To Book</span>
+        </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" data-id="d6-drinks">
         <div class="timeline-time">21:00+</div>
-        <div class="timeline-title">Optional drinks</div>
-        <div class="timeline-desc">Casual around Hirafu</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d6-drinks-title">Optional drinks</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d6-drinks-desc">Casual around Hirafu</div>
       </div>
     </div>
     <div class="options-box">
       <h4>Dinner Options — pick one</h4>
-      <div class="option-item">
-        <input type="checkbox" id="d6-manmosu">
-        <label for="d6-manmosu"><strong>Sakaba Manmosu</strong> — izakaya, very Japanese, cozy. Tempura + sake.</label>
+      <div class="option-item" data-option="d6-manmosu">
+        <input type="checkbox" id="d6-manmosu" onchange="toggleOption(this)">
+        <label for="d6-manmosu"><strong>Sakaba Manmosu</strong> — izakaya, very Japanese, cozy</label>
       </div>
-      <div class="option-item">
-        <input type="checkbox" id="d6-tempura">
+      <div class="option-item" data-option="d6-tempura">
+        <input type="checkbox" id="d6-tempura" onchange="toggleOption(this)">
         <label for="d6-tempura"><strong>Tempura Araki</strong> — omakase tempura at Setsu</label>
       </div>
-      <div class="option-item">
-        <input type="checkbox" id="d6-akaru">
+      <div class="option-item" data-option="d6-akaru">
+        <input type="checkbox" id="d6-akaru" onchange="toggleOption(this)">
         <label for="d6-akaru"><strong>Akaru</strong> — sushi, seasonal hot pots, oysters</label>
       </div>
     </div>
@@ -960,32 +1169,40 @@
       <span class="city-badge niseko">Niseko</span>
     </div>
     <div class="timeline">
-      <div class="timeline-item booked">
-        <div class="timeline-time">06:30–16:30</div>
-        <div class="timeline-title">Snowboarding with Guide — Long Day</div>
-        <div class="timeline-desc">Push yourselves, first tracks</div>
-        <span class="timeline-tag tag-ski">Ski</span>
-        <span class="timeline-tag tag-guide">With Guide</span>
-        <span class="timeline-tag tag-booked">Booked</span>
+      <div class="timeline-item highlight" data-status="booked" data-id="d7-ski">
+        <div class="timeline-time editable" contenteditable="true" data-field="d7-ski-time">06:30–16:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d7-ski-title">Snowboarding with Guide — Long Day</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d7-ski-desc">Push yourselves, first tracks</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-ski">Ski</span>
+          <span class="timeline-tag tag-guide">With Guide</span>
+          <span class="timeline-tag tag-status booked" data-id="d7-ski" onclick="toggleStatus(this)">Booked</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">12:30–13:30</div>
-        <div class="timeline-title">On-Mountain Lunch</div>
-        <div class="timeline-desc">Hanazono EDGE (snow crab ramen) or Yang Shu Ten</div>
-        <span class="timeline-tag tag-food">Lunch</span>
+      <div class="timeline-item" data-id="d7-lunch">
+        <div class="timeline-time editable" contenteditable="true" data-field="d7-lunch-time">12:30–13:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d7-lunch-title">On-Mountain Lunch</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d7-lunch-desc">Hanazono EDGE (snow crab ramen) or Yang Shu Ten</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Lunch</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">17:00–18:30</div>
-        <div class="timeline-title">Annupuri Onsen</div>
-        <div class="timeline-desc">Yugokorotei or Iroha — worth the trip</div>
-        <span class="timeline-tag tag-relax">Relax</span>
+      <div class="timeline-item" data-id="d7-onsen">
+        <div class="timeline-time editable" contenteditable="true" data-field="d7-onsen-time">17:00–18:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d7-onsen-title">Annupuri Onsen</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d7-onsen-desc">Yugokorotei or Iroha — worth the trip</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-relax">Relax</span>
+        </div>
       </div>
-      <div class="timeline-item booked">
-        <div class="timeline-time">19:30–22:00</div>
-        <div class="timeline-title">KAMIMURA ★</div>
-        <div class="timeline-desc">Statement night — tasting menu + sake pairing. Taxi arranged by hotel.</div>
-        <span class="timeline-tag tag-food">Dinner</span>
-        <span class="timeline-tag tag-tobook">Must Book</span>
+      <div class="timeline-item highlight" data-status="tobook" data-id="d7-dinner">
+        <div class="timeline-time editable" contenteditable="true" data-field="d7-dinner-time">19:30–22:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d7-dinner-title">KAMIMURA ★</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d7-dinner-desc">Statement night — tasting menu + sake pairing. Taxi arranged by hotel.</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Dinner</span>
+          <span class="timeline-tag tag-status tobook" data-id="d7-dinner" onclick="toggleStatus(this)">Must Book</span>
+        </div>
       </div>
     </div>
   </section>
@@ -1001,40 +1218,47 @@
       <span class="city-badge niseko">Niseko</span>
     </div>
     <div class="timeline">
-      <div class="timeline-item booked">
-        <div class="timeline-time">08:00–17:00</div>
-        <div class="timeline-title">Snowboarding with Guide</div>
-        <div class="timeline-desc">Regular ski day, or upgrade to cat skiing</div>
-        <span class="timeline-tag tag-ski">Ski</span>
-        <span class="timeline-tag tag-guide">With Guide</span>
-        <span class="timeline-tag tag-booked">Booked</span>
+      <div class="timeline-item highlight" data-status="booked" data-id="d8-ski">
+        <div class="timeline-time editable" contenteditable="true" data-field="d8-ski-time">08:00–17:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d8-ski-title">Snowboarding with Guide</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d8-ski-desc">Regular ski day, or upgrade to cat skiing</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-ski">Ski</span>
+          <span class="timeline-tag tag-guide">With Guide</span>
+          <span class="timeline-tag tag-status booked" data-id="d8-ski" onclick="toggleStatus(this)">Booked</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">12:30–13:30</div>
-        <div class="timeline-title">On-Mountain Lunch</div>
-        <span class="timeline-tag tag-food">Lunch</span>
+      <div class="timeline-item" data-id="d8-lunch">
+        <div class="timeline-time editable" contenteditable="true" data-field="d8-lunch-time">12:30–13:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d8-lunch-title">On-Mountain Lunch</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Lunch</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">17:30–19:00</div>
-        <div class="timeline-title">Onsen</div>
-        <div class="timeline-desc">Rest up before dinner</div>
-        <span class="timeline-tag tag-relax">Relax</span>
+      <div class="timeline-item" data-id="d8-onsen">
+        <div class="timeline-time editable" contenteditable="true" data-field="d8-onsen-time">17:30–19:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d8-onsen-title">Onsen</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d8-onsen-desc">Rest up before dinner</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-relax">Relax</span>
+        </div>
       </div>
-      <div class="timeline-item booked">
-        <div class="timeline-time">19:30–21:30</div>
-        <div class="timeline-title">MAME Niseko</div>
-        <div class="timeline-desc">Excellent Japanese cuisine</div>
-        <span class="timeline-tag tag-food">Dinner</span>
-        <span class="timeline-tag tag-booked">Booked</span>
+      <div class="timeline-item highlight" data-status="booked" data-id="d8-dinner">
+        <div class="timeline-time editable" contenteditable="true" data-field="d8-dinner-time">19:30–21:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d8-dinner-title">MAME Niseko</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d8-dinner-desc">Excellent Japanese cuisine</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Dinner</span>
+          <span class="timeline-tag tag-status booked" data-id="d8-dinner" onclick="toggleStatus(this)">Booked</span>
+        </div>
       </div>
     </div>
     <div class="options-box">
       <h4>Upgrade Option</h4>
-      <div class="option-item">
-        <input type="checkbox" id="d8-cat">
-        <label for="d8-cat"><strong>Weiss Powder Cat Skiing</strong> — fresh tracks, mellow terrain, lunch included. Highly recommended!</label>
+      <div class="option-item" data-option="d8-cat">
+        <input type="checkbox" id="d8-cat" onchange="toggleOption(this)">
+        <label for="d8-cat"><strong>Weiss Powder Cat Skiing</strong> — fresh tracks, mellow terrain, lunch included</label>
       </div>
-      <p class="option-note">If doing cat skiing, you'll be tired but happy — MAME is a perfect calm dinner after</p>
     </div>
   </section>
 
@@ -1049,51 +1273,59 @@
       <span class="city-badge niseko">Niseko</span>
     </div>
     <div class="timeline">
-      <div class="timeline-item booked">
-        <div class="timeline-time">08:00–15:00</div>
-        <div class="timeline-title">Snowboarding with Guide — Final Day</div>
-        <div class="timeline-desc">Favorite runs, savor it. Shorter day before travel tomorrow.</div>
-        <span class="timeline-tag tag-ski">Ski</span>
-        <span class="timeline-tag tag-guide">With Guide</span>
-        <span class="timeline-tag tag-booked">Booked</span>
+      <div class="timeline-item highlight" data-status="booked" data-id="d9-ski">
+        <div class="timeline-time editable" contenteditable="true" data-field="d9-ski-time">08:00–15:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d9-ski-title">Snowboarding with Guide — Final Day</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d9-ski-desc">Favorite runs, savor it</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-ski">Ski</span>
+          <span class="timeline-tag tag-guide">With Guide</span>
+          <span class="timeline-tag tag-status booked" data-id="d9-ski" onclick="toggleStatus(this)">Booked</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">12:30–13:30</div>
-        <div class="timeline-title">Bo-Yo-So</div>
-        <div class="timeline-desc">Hirafu slopes — quick, local favorite</div>
-        <span class="timeline-tag tag-food">Lunch</span>
+      <div class="timeline-item" data-id="d9-lunch">
+        <div class="timeline-time editable" contenteditable="true" data-field="d9-lunch-time">12:30–13:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d9-lunch-title">Bo-Yo-So</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d9-lunch-desc">Hirafu slopes — quick, local favorite</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Lunch</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">15:30–17:00</div>
-        <div class="timeline-title">Final après-ski</div>
-        <div class="timeline-desc">Drink in Hirafu, say goodbye to powder</div>
+      <div class="timeline-item" data-id="d9-apres">
+        <div class="timeline-time editable" contenteditable="true" data-field="d9-apres-time">15:30–17:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d9-apres-title">Final après-ski</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d9-apres-desc">Drink in Hirafu, say goodbye to powder</div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">17:30–19:00</div>
-        <div class="timeline-title">Onsen + Pack</div>
-        <span class="timeline-tag tag-relax">Relax</span>
+      <div class="timeline-item" data-id="d9-onsen">
+        <div class="timeline-time editable" contenteditable="true" data-field="d9-onsen-time">17:30–19:00</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d9-onsen-title">Onsen + Pack</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-relax">Relax</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">19:30–21:30</div>
-        <div class="timeline-title">Dinner — Last Night in Niseko</div>
-        <div class="timeline-desc">Perfect "last night" energy</div>
-        <span class="timeline-tag tag-food">Dinner</span>
-        <span class="timeline-tag tag-tobook">To Book</span>
+      <div class="timeline-item" data-status="tobook" data-id="d9-dinner">
+        <div class="timeline-time editable" contenteditable="true" data-field="d9-dinner-time">19:30–21:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d9-dinner-title">Dinner — Last Night in Niseko</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d9-dinner-desc">Perfect "last night" energy</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Dinner</span>
+          <span class="timeline-tag tag-status tobook" data-id="d9-dinner" onclick="toggleStatus(this)">To Book</span>
+        </div>
       </div>
     </div>
     <div class="options-box">
       <h4>Dinner Options — pick one</h4>
-      <div class="option-item">
-        <input type="checkbox" id="d9-barn">
-        <label for="d9-barn"><strong>The Barn by Odin</strong> (Kutchan) — cozy, intimate, Japanese-European. Worth the taxi.</label>
+      <div class="option-item" data-option="d9-barn">
+        <input type="checkbox" id="d9-barn" onchange="toggleOption(this)">
+        <label for="d9-barn"><strong>The Barn by Odin</strong> (Kutchan) — cozy, intimate</label>
       </div>
-      <div class="option-item">
-        <input type="checkbox" id="d9-soba">
+      <div class="option-item" data-option="d9-soba">
+        <input type="checkbox" id="d9-soba" onchange="toggleOption(this)">
         <label for="d9-soba"><strong>Soba Kaiseki Ichimura</strong> — refined, comforting</label>
       </div>
-      <div class="option-item">
-        <input type="checkbox" id="d9-robata">
-        <label for="d9-robata"><strong>Robata Shimomura</strong> — premium robata, Hokkaido wagyu</label>
+      <div class="option-item" data-option="d9-robata">
+        <input type="checkbox" id="d9-robata" onchange="toggleOption(this)">
+        <label for="d9-robata"><strong>Robata Shimomura</strong> — premium robata, wagyu</label>
       </div>
     </div>
   </section>
@@ -1114,7 +1346,7 @@
       <div class="logistics-row">
         <div>
           <span class="logistics-route">Niseko → Sapporo Airport</span>
-          <span class="logistics-code">Rental Car</span>
+          <span class="logistics-code">Rental Car ✓</span>
         </div>
         <div class="logistics-time">~3 hours (return car)</div>
       </div>
@@ -1133,45 +1365,53 @@
     </div>
 
     <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-time">08:00–09:30</div>
-        <div class="timeline-title">Breakfast at Sansui</div>
-        <div class="timeline-desc">Last coffee, goodbye powder ❄️</div>
+      <div class="timeline-item" data-id="d10-breakfast">
+        <div class="timeline-time editable" contenteditable="true" data-field="d10-breakfast-time">08:00–09:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d10-breakfast-title">Breakfast at Sansui</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d10-breakfast-desc">Last coffee, goodbye powder ❄️</div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" data-id="d10-checkout">
         <div class="timeline-time">09:30–10:30</div>
         <div class="timeline-title">Pack & Check out</div>
       </div>
-      <div class="timeline-item booked">
+      <div class="timeline-item" data-status="booked" data-id="d10-drive">
         <div class="timeline-time">11:00–14:00</div>
-        <div class="timeline-title">Drive to Sapporo Airport</div>
-        <div class="timeline-desc">Return rental car at New Chitose — leave buffer time</div>
-        <span class="timeline-tag tag-transport">Transport</span>
-        <span class="timeline-tag tag-booked">Car Booked</span>
+        <div class="timeline-title editable" contenteditable="true" data-field="d10-drive-title">Drive to Sapporo Airport</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d10-drive-desc">Return rental car at New Chitose</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-transport">Transport</span>
+          <span class="timeline-tag tag-status booked" data-id="d10-drive" onclick="toggleStatus(this)">Car Booked</span>
+        </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" data-id="d10-airport">
         <div class="timeline-time">14:00–16:30</div>
-        <div class="timeline-title">Sapporo Airport</div>
-        <div class="timeline-desc">Return car, check-in, quick lunch</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d10-airport-title">Sapporo Airport</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d10-airport-desc">Return car, check-in, quick lunch</div>
       </div>
-      <div class="timeline-item booked">
+      <div class="timeline-item" data-status="booked" data-id="d10-flight">
         <div class="timeline-time">17:00–18:45</div>
-        <div class="timeline-title">Flight to Tokyo</div>
-        <div class="timeline-desc">Sapporo CTS → Haneda HND</div>
-        <span class="timeline-tag tag-transport">Transport</span>
-        <span class="timeline-tag tag-booked">Booked</span>
+        <div class="timeline-title editable" contenteditable="true" data-field="d10-flight-title">Flight to Tokyo</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d10-flight-desc">Sapporo CTS → Haneda HND</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-transport">Transport</span>
+          <span class="timeline-tag tag-status booked" data-id="d10-flight" onclick="toggleStatus(this)">Booked</span>
+        </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" data-id="d10-transfer">
         <div class="timeline-time">19:00–20:00</div>
-        <div class="timeline-title">Transfer to TRUNK Hotel</div>
-        <div class="timeline-desc">Yoyogi Park area (~30-45 min from Haneda)</div>
-        <span class="timeline-tag tag-transport">Transport</span>
+        <div class="timeline-title editable" contenteditable="true" data-field="d10-transfer-title">Transfer to TRUNK Hotel</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d10-transfer-desc">Yoyogi Park area</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-transport">Transport</span>
+        </div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-time">20:30–22:30</div>
-        <div class="timeline-title">Nakameguro Izakaya</div>
-        <div class="timeline-desc">Walk across Meguro River (15 min), pick a spot</div>
-        <span class="timeline-tag tag-food">Dinner</span>
+      <div class="timeline-item" data-id="d10-dinner">
+        <div class="timeline-time editable" contenteditable="true" data-field="d10-dinner-time">20:30–22:30</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d10-dinner-title">Nakameguro Izakaya</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d10-dinner-desc">Walk across Meguro River, pick a spot</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-food">Dinner</span>
+        </div>
       </div>
     </div>
   </section>
@@ -1208,37 +1448,42 @@
     </div>
 
     <div class="timeline">
-      <div class="timeline-item">
+      <div class="timeline-item" data-id="d11-checkout">
         <div class="timeline-time">06:00</div>
         <div class="timeline-title">TRUNK Hotel checkout</div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" data-id="d11-transfer">
         <div class="timeline-time">06:30–08:30</div>
-        <div class="timeline-title">Transfer to Narita</div>
-        <div class="timeline-desc">~1.5–2 hours depending on traffic</div>
-        <span class="timeline-tag tag-transport">Transport</span>
+        <div class="timeline-title editable" contenteditable="true" data-field="d11-transfer-title">Transfer to Narita</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d11-transfer-desc">~1.5–2 hours</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-transport">Transport</span>
+        </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" data-id="d11-airport">
         <div class="timeline-time">08:30–10:30</div>
-        <div class="timeline-title">Narita Airport</div>
-        <div class="timeline-desc">Check-in, security, last souvenirs</div>
+        <div class="timeline-title editable" contenteditable="true" data-field="d11-airport-title">Narita Airport</div>
+        <div class="timeline-desc editable" contenteditable="true" data-field="d11-airport-desc">Check-in, security, souvenirs</div>
       </div>
-      <div class="timeline-item booked">
+      <div class="timeline-item" data-status="booked" data-id="d11-flight1">
         <div class="timeline-time">10:45</div>
         <div class="timeline-title">BA4601 → Frankfurt</div>
-        <span class="timeline-tag tag-transport">Transport</span>
-        <span class="timeline-tag tag-booked">Booked</span>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-transport">Transport</span>
+          <span class="timeline-tag tag-status booked" data-id="d11-flight1" onclick="toggleStatus(this)">Booked</span>
+        </div>
       </div>
-      <div class="timeline-item booked">
+      <div class="timeline-item" data-status="booked" data-id="d11-flight2">
         <div class="timeline-time">20:10</div>
         <div class="timeline-title">BA8737 → London</div>
-        <span class="timeline-tag tag-transport">Transport</span>
-        <span class="timeline-tag tag-booked">Booked</span>
+        <div class="timeline-tags">
+          <span class="timeline-tag tag-transport">Transport</span>
+          <span class="timeline-tag tag-status booked" data-id="d11-flight2" onclick="toggleStatus(this)">Booked</span>
+        </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" data-id="d11-arrive">
         <div class="timeline-time">Evening</div>
-        <div class="timeline-title">Arrive London</div>
-        <div class="timeline-desc">Welcome home 🏠</div>
+        <div class="timeline-title">Arrive London 🏠</div>
       </div>
     </div>
   </section>
@@ -1254,27 +1499,25 @@
           <li class="rec">★ MAME Niseko</li>
           <li class="rec">★ The Barn by Odin</li>
           <li>Soba Kaiseki Ichimura</li>
-          <li>Sakaba Manmosu (izakaya)</li>
+          <li>Sakaba Manmosu</li>
           <li>Tempura Araki</li>
-          <li>Méli Mélo (French-Italian)</li>
-          <li>Akaru (sushi, oysters)</li>
+          <li>Akaru (sushi)</li>
           <li>Robata Shimomura</li>
-          <li>Shabu Shabu Mori</li>
         </ul>
       </div>
       <div class="reference-col">
         <h4>On-Mountain Lunch</h4>
         <ul>
-          <li class="rec">★ King Bell Hut (curry)</li>
+          <li class="rec">★ King Bell Hut</li>
           <li>Hanazono EDGE</li>
           <li>Yang Shu Ten</li>
           <li>Bo-Yo-So</li>
         </ul>
         <h4 style="margin-top:1rem;">Bars</h4>
         <ul>
-          <li class="rec">★ Gyu+ Bar (fridge door)</li>
+          <li class="rec">★ Gyu+ Bar</li>
           <li>Bar Gyu</li>
-          <li>Musu Bar (speakeasy)</li>
+          <li>Musu Bar</li>
         </ul>
       </div>
       <div class="reference-col">
@@ -1283,22 +1526,240 @@
           <li>Sansui (in-room)</li>
           <li>Ki Niseko</li>
           <li>AYA Niseko</li>
-          <li>Aspect Niseko</li>
           <li class="rec">★ Annupuri Onsen</li>
         </ul>
         <h4 style="margin-top:1rem;">Activities</h4>
         <ul>
           <li class="rec">★ Weiss Cat Skiing</li>
-          <li>Night skiing (Annupuri)</li>
+          <li>Night skiing</li>
         </ul>
       </div>
     </div>
   </section>
 
+  <!-- Notes Section -->
+  <section class="notes-section">
+    <h3>📝 Trip Notes</h3>
+    <textarea class="notes-textarea" id="trip-notes" placeholder="Add your notes here... packing list, confirmation numbers, things to remember..."></textarea>
+  </section>
+
 </main>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
 <script>
-  // Highlight current day in nav on scroll
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyCqtRQBPEmUwkQlD9KfQU36pZN1_pZnEO4",
+    authDomain: "japow-trip.firebaseapp.com",
+    projectId: "japow-trip",
+    storageBucket: "japow-trip.firebasestorage.app",
+    messagingSenderId: "1048408353213",
+    appId: "1:1048408353213:web:c98e170a8514a84e3d4ad4"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const docRef = db.collection('trips').doc('japan-2026');
+
+  // Track if we're currently updating from server
+  let isUpdatingFromServer = false;
+
+  // Update sync status
+  function setSyncStatus(status) {
+    const banner = document.getElementById('sync-banner');
+    const statusEl = document.getElementById('sync-status');
+    
+    banner.classList.remove('offline', 'syncing');
+    
+    if (status === 'synced') {
+      statusEl.textContent = 'Synced — changes appear for everyone';
+    } else if (status === 'syncing') {
+      banner.classList.add('syncing');
+      statusEl.textContent = 'Syncing...';
+    } else if (status === 'offline') {
+      banner.classList.add('offline');
+      statusEl.textContent = 'Offline — changes saved locally';
+    }
+  }
+
+  // Initialize real-time listener
+  function initRealtimeSync() {
+    docRef.onSnapshot((doc) => {
+      if (doc.exists) {
+        isUpdatingFromServer = true;
+        const data = doc.data();
+        
+        // Update fields
+        if (data.fields) {
+          Object.entries(data.fields).forEach(([field, value]) => {
+            const el = document.querySelector(`[data-field="${field}"]`);
+            if (el && el.innerText !== value && document.activeElement !== el) {
+              el.innerText = value;
+              el.classList.add('synced');
+              setTimeout(() => el.classList.remove('synced'), 500);
+            }
+          });
+        }
+        
+        // Update statuses
+        if (data.statuses) {
+          Object.entries(data.statuses).forEach(([id, status]) => {
+            const item = document.querySelector(`.timeline-item[data-id="${id}"]`);
+            const tag = document.querySelector(`.tag-status[data-id="${id}"]`);
+            if (item && tag && item.dataset.status !== status) {
+              item.dataset.status = status;
+              tag.classList.remove('booked', 'tobook');
+              tag.classList.add(status);
+              tag.textContent = status === 'booked' ? 'Booked' : 'To Book';
+            }
+          });
+        }
+        
+        // Update options
+        if (data.options) {
+          Object.entries(data.options).forEach(([id, checked]) => {
+            const checkbox = document.getElementById(id);
+            if (checkbox && checkbox.checked !== checked) {
+              checkbox.checked = checked;
+              const item = checkbox.closest('.option-item');
+              if (checked) {
+                item.classList.add('checked');
+              } else {
+                item.classList.remove('checked');
+              }
+            }
+          });
+        }
+        
+        // Update notes
+        if (data.notes !== undefined) {
+          const notesEl = document.getElementById('trip-notes');
+          if (notesEl && notesEl.value !== data.notes && document.activeElement !== notesEl) {
+            notesEl.value = data.notes;
+          }
+        }
+        
+        isUpdatingFromServer = false;
+        setSyncStatus('synced');
+      } else {
+        // Create initial document
+        docRef.set({ fields: {}, statuses: {}, options: {}, notes: '' });
+      }
+    }, (error) => {
+      console.error('Sync error:', error);
+      setSyncStatus('offline');
+    });
+  }
+
+  // Debounce helper
+  function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  }
+
+  // Save field to Firebase
+  const saveField = debounce((field, value) => {
+    if (isUpdatingFromServer) return;
+    setSyncStatus('syncing');
+    docRef.update({
+      [`fields.${field}`]: value
+    }).then(() => setSyncStatus('synced'))
+      .catch(() => setSyncStatus('offline'));
+  }, 500);
+
+  // Save status to Firebase
+  function saveStatus(id, status) {
+    if (isUpdatingFromServer) return;
+    setSyncStatus('syncing');
+    docRef.update({
+      [`statuses.${id}`]: status
+    }).then(() => setSyncStatus('synced'))
+      .catch(() => setSyncStatus('offline'));
+  }
+
+  // Save option to Firebase
+  function saveOption(id, checked) {
+    if (isUpdatingFromServer) return;
+    setSyncStatus('syncing');
+    docRef.update({
+      [`options.${id}`]: checked
+    }).then(() => setSyncStatus('synced'))
+      .catch(() => setSyncStatus('offline'));
+  }
+
+  // Save notes to Firebase
+  const saveNotes = debounce(() => {
+    if (isUpdatingFromServer) return;
+    setSyncStatus('syncing');
+    docRef.update({
+      notes: document.getElementById('trip-notes').value
+    }).then(() => setSyncStatus('synced'))
+      .catch(() => setSyncStatus('offline'));
+  }, 500);
+
+  // Toggle booking status
+  function toggleStatus(el) {
+    const id = el.dataset.id;
+    const item = el.closest('.timeline-item');
+    
+    if (el.classList.contains('booked')) {
+      el.classList.remove('booked');
+      el.classList.add('tobook');
+      el.textContent = 'To Book';
+      item.dataset.status = 'tobook';
+    } else {
+      el.classList.remove('tobook');
+      el.classList.add('booked');
+      el.textContent = 'Booked';
+      item.dataset.status = 'booked';
+    }
+    
+    saveStatus(id, item.dataset.status);
+  }
+
+  // Toggle option checkbox
+  function toggleOption(checkbox) {
+    const item = checkbox.closest('.option-item');
+    if (checkbox.checked) {
+      item.classList.add('checked');
+    } else {
+      item.classList.remove('checked');
+    }
+    saveOption(checkbox.id, checkbox.checked);
+  }
+
+  // Setup editable fields
+  function setupEditableFields() {
+    document.querySelectorAll('.editable').forEach(el => {
+      el.addEventListener('input', () => {
+        saveField(el.dataset.field, el.innerText);
+      });
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          el.blur();
+        }
+      });
+    });
+    
+    // Setup notes
+    document.getElementById('trip-notes').addEventListener('input', saveNotes);
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    setupEditableFields();
+    initRealtimeSync();
+  });
+
+  // Nav scroll highlight
   const sections = document.querySelectorAll('.day-section, .reference-section');
   const navLinks = document.querySelectorAll('nav a');
   
