@@ -1776,5 +1776,172 @@
   sections.forEach(section => observer.observe(section));
 </script>
 
+<!-- Google Maps Pin Links -->
+<style>
+  .map-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    background: #f1f5f9;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 12px;
+    margin-left: 6px;
+    vertical-align: middle;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    border: 1px solid transparent;
+  }
+  .map-link:hover {
+    background: #e0f2fe;
+    color: #0284c7;
+    border-color: #bae6fd;
+    transform: scale(1.1);
+  }
+  .hotel-box .map-link {
+    margin-left: auto;
+    margin-right: 0.5rem;
+  }
+  .option-item .map-link {
+    margin-left: 2px;
+  }
+  .reference-col .map-link {
+    margin-left: 4px;
+  }
+</style>
+<script>
+(function() {
+  const places = {
+    'EDITION Tokyo':          'ChIJwxqh7qyLGGARp01W6wdogZI',
+    'Sowaka Ryokan':          'ChIJa0AGicQIAWARJIs0FhLMRyo',
+    'Sansui Niseko':          'ChIJ7WjeJpaxCl8RfGKzYl_jQXI',
+    'TRUNK Hotel':            'ChIJRVwkXF2NGGARf276xasJiF8',
+    'Tonkatsu Suzuki':        'ChIJGeYlX_mLGGARTlIbc1yzJb4',
+    'Jiyugaoka':              'ChIJR0UdxeH0GGARwV6PMnPblQM',
+    'Little Nap Coffee Stand':'ChIJUyaS0ErzGGAR6_mFuqndQ9o',
+    'Meiji Jingu':            'ChIJ5SZMmreMGGARcz8QSTiJyo8',
+    'Afuri Harajuku':         'ChIJba17TbqMGGARFtDV6hkZbcs',
+    'Shimokitazawa':          'ChIJw_teZ_8hGGARgsSeLR2OLjM',
+    'Pianola Records':        'ChIJp_78AjrzGGARjhsKaZsWXFo',
+    'Sushi Masahi':           'ChIJyTFxpuKNGGARxdaK4WpltA8',
+    'Sushi Masashi':          'ChIJyTFxpuKNGGARxdaK4WpltA8',
+    'Tsukiji Outer Market':   'ChIJW2cLzSGLGGARXAKXv6EkbqI',
+    'Koenji':                 'ChIJb_sgAX7yGGARxVrgA881DRE',
+    'Omotesando':             'ChIJSTdtYqGMGGAR3XD4H-GfStY',
+    'Cibone':                 'ChIJU_Hvu56MGGARX_Pm2BFlsdY',
+    'Loft':                   'ChIJv1LdWqiMGGARtLjjcZL2Qsk',
+    'Shibuya Crossing':       'ChIJK9EM68qLGGARacmu4KJj5SA',
+    'Miyashita Park':         'ChIJURWUIuaNGGARvtlnJNz-AFQ',
+    'Golden Gai':             'ChIJr7mGZdmMGGARjxoMFeHApXE',
+    'Albatross':              'ChIJa6nPcdmMGGARgAHVyVca7aI',
+    'Nakagawa Masashichi':    'ChIJ4eXUIPuLGGARpkUaOwfIiKM',
+    'Kihara':                 'ChIJ6bL9QkaNGGARKstJFWtLLZ0',
+    'Gion Loka':              'ChIJa0AGicQIAWARJIs0FhLMRyo',
+    'Yasaka Shrine':          'ChIJqewQoHkIAWAR6RokWp3Iesc',
+    'Ninen-zaka':             'ChIJqZsSA9AIAWARewnW_cioTog',
+    'Sannen-zaka':            'ChIJqZsSA9AIAWARewnW_cioTog',
+    'Kohaku':                 'ChIJmbyIv5QIAWARDSUj2-xnwW4',
+    'Kyomachiya Obanzai Kohaku': 'ChIJmbyIv5QIAWARDSUj2-xnwW4',
+    'Kinkaku-ji':             'ChIJvUbrwCCoAWARX2QiHCsn5A4',
+    'Fushimi Inari':          'ChIJIW0uPRUPAWAR6eI6dRzKGns',
+    'Kiyomizu-dera':          'ChIJB_vchdMIAWARujTEUIZlr2I',
+    'Ryoan-ji':               'ChIJp7ocMCqoAWARQoXXRj4Xq-E',
+    'Ramen Nakama':           'ChIJCX5TZRy6Cl8RdMHe324K7BE',
+    'Bar Gyu+':               'ChIJt49SWRGwCl8RQlQWTeoqSuM',
+    'Bar Gyu':                'ChIJt49SWRGwCl8RQlQWTeoqSuM',
+    'Gyu+ Bar':               'ChIJt49SWRGwCl8RQlQWTeoqSuM',
+    'King Bell Hut':          'ChIJLymf0KS6Cl8R3tV0FUunnqQ',
+    'Ki Niseko':              'ChIJT3L_QA6wCl8R0JjT3AMom_Q',
+    'AYA Niseko':             'ChIJKR-0vBGwCl8R3gxaaHsl3dI',
+    'Sakaba Manmosu':         'ChIJJ9EBoJuvCl8RGm5BCqhynD4',
+    'Tempura Araki':          'ChIJuWyBBFSxCl8RcNKdD2xk1Nk',
+    'Akaru':                  'ChIJZYqzlQ2wCl8RoShw3PybgfQ',
+    'Hanazono EDGE':          'ChIJ-0Jtr5-7Cl8RoJ3ErY3PEBA',
+    'Yang Shu Ten':           'ChIJxVQGvuuvCl8RIYrJqUEzamY',
+    'Yugokorotei':            'ChIJn_mftHmlCl8RyEpD4wdywWs',
+    'Iroha':                  'ChIJAwuLrGalCl8RtgQYfeJf4z8',
+    'KAMIMURA':               'ChIJ1fkbwA2wCl8RI1xs1_F19AU',
+    'Kamimura':               'ChIJ1fkbwA2wCl8RI1xs1_F19AU',
+    'MAME Niseko':            'ChIJyfMpJQmxCl8RDbq_4DL1naA',
+    'MAME':                   'ChIJyfMpJQmxCl8RDbq_4DL1naA',
+    'Bo-Yo-So':               'ChIJawHz-aC6Cl8RAE91xO_SaO8',
+    'The Barn by Odin':       'ChIJQy0NxhOwCl8Rxm0RRky1e9U',
+    'Soba Kaiseki Ichimura':  'ChIJ6a57T2-wCl8RK4ESlCnCQ3s',
+    'Robata Shimomura':       'ChIJZzWLoRa7Cl8RPk8rFe5wBTg',
+    'Musu Bar':               'ChIJC48DIhKwCl8RKRb1FpDptmw',
+    'Weiss Cat Skiing':       'ChIJb4a8Dl-6Cl8RnqwaA7QMyJQ',
+    'Weiss':                  'ChIJb4a8Dl-6Cl8RnqwaA7QMyJQ',
+    'Annupuri Onsen':         'ChIJn_mftHmlCl8RyEpD4wdywWs',
+    'Nakameguro':             'ChIJAas2LziLGGAROimsxcM_Rqo',
+  };
+
+  function mapsUrl(pid) {
+    return 'https://www.google.com/maps/place/?q=place_id:' + pid;
+  }
+
+  function makeLink(pid) {
+    const a = document.createElement('a');
+    a.href = mapsUrl(pid);
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.className = 'map-link';
+    a.title = 'Open in Google Maps';
+    a.textContent = '\u{1F4CD}';
+    a.addEventListener('click', function(e) { e.stopPropagation(); });
+    return a;
+  }
+
+  function match(text) {
+    const keys = Object.keys(places).sort(function(a, b) { return b.length - a.length; });
+    for (let i = 0; i < keys.length; i++) {
+      if (text.indexOf(keys[i]) !== -1) return places[keys[i]];
+    }
+    return null;
+  }
+
+  // Timeline titles
+  document.querySelectorAll('.timeline-title').forEach(function(el) {
+    const pid = match(el.textContent);
+    if (pid) el.appendChild(makeLink(pid));
+  });
+
+  // Timeline descriptions — add pins for places NOT already linked in the title
+  document.querySelectorAll('.timeline-desc').forEach(function(el) {
+    const text = el.textContent;
+    const titleEl = el.parentElement.querySelector('.timeline-title');
+    const titlePid = titleEl ? match(titleEl.textContent) : null;
+    const keys = Object.keys(places).sort(function(a, b) { return b.length - a.length; });
+    const seen = new Set();
+    for (let i = 0; i < keys.length; i++) {
+      if (text.indexOf(keys[i]) !== -1 && !seen.has(places[keys[i]]) && places[keys[i]] !== titlePid) {
+        seen.add(places[keys[i]]);
+        el.appendChild(makeLink(places[keys[i]]));
+      }
+    }
+  });
+
+  // Hotel boxes
+  document.querySelectorAll('.hotel-name').forEach(function(el) {
+    const pid = match(el.textContent);
+    if (pid) el.parentElement.insertBefore(makeLink(pid), el.nextSibling);
+  });
+
+  // Option items (checkboxes)
+  document.querySelectorAll('.option-item label').forEach(function(el) {
+    const pid = match(el.textContent);
+    if (pid) el.appendChild(makeLink(pid));
+  });
+
+  // Reference section list items
+  document.querySelectorAll('.reference-col li').forEach(function(el) {
+    const pid = match(el.textContent);
+    if (pid) el.appendChild(makeLink(pid));
+  });
+})();
+</script>
+
 </body>
 </html>
