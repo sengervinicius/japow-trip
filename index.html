@@ -1776,7 +1776,6 @@
   sections.forEach(section => observer.observe(section));
 </script>
 
-
 <!-- Google Maps Pin Links -->
 <style>
   .map-link {
@@ -1877,7 +1876,14 @@
     'Weiss Cat Skiing':       ['Hanazono Powder Guides Niseko Weiss', 'ChIJb4a8Dl-6Cl8RnqwaA7QMyJQ'],
     'Weiss':                  ['Hanazono Powder Guides Niseko Weiss', 'ChIJb4a8Dl-6Cl8RnqwaA7QMyJQ'],
     'Annupuri Onsen':         ['Yugokorotei Annupuri Onsen Niseko', 'ChIJn_mftHmlCl8RyEpD4wdywWs'],
-    'Nakameguro':             ['Nakameguro Tokyo', 'ChIJAas2LziLGGAROimsxcM_Rqo']
+    'Nakameguro':             ['Nakameguro Tokyo', 'ChIJAas2LziLGGAROimsxcM_Rqo'],
+    'Shijo-mae':              ['Shijo-mae Station Toyosu Tokyo', 'ChIJJfFjVZCJGGAR4bnSFemnDEM'],
+    'Imperial Palace':        ['Imperial Palace Tokyo', 'ChIJTQbYAg2MGGARt22eNwtfGtE'],
+    'Ginza':                  ['Ginza Tokyo', 'ChIJu2-DAeeLGGARUZipC7OFRmA'],
+    'Tsutaya Books':          ['Tsutaya Books Daikanyama Tokyo', 'ChIJgfjQvk-LGGARqVwq1_ra-dY'],
+    'Aoyama':                 ['Omotesando Avenue Tokyo', 'ChIJSTdtYqGMGGAR3XD4H-GfStY'],
+    'Kabukicho':              ['Shinjuku Golden Gai Tokyo', 'ChIJr7mGZdmMGGARjxoMFeHApXE'],
+    'Unagi':                  ['Asakusa Unagi Sansho Tokyo', 'ChIJ93g607-OGGARPhvPocugsic']
   };
 
   function mapsUrl(query, pid) {
@@ -1912,7 +1918,6 @@
   function injectAllPins() {
     clearAllPins();
 
-    // Timeline titles - insert AFTER the editable element, not inside it
     document.querySelectorAll('.timeline-title').forEach(function(el) {
       var m = matchPlace(el.textContent);
       if (!m) return;
@@ -1923,7 +1928,6 @@
       }
     });
 
-    // Timeline descriptions - pins for places NOT already linked via title
     document.querySelectorAll('.timeline-desc').forEach(function(el) {
       var text = el.textContent;
       var titleEl = el.parentElement.querySelector('.timeline-title');
@@ -1944,36 +1948,30 @@
       }
     });
 
-    // Hotel boxes
     document.querySelectorAll('.hotel-name').forEach(function(el) {
       var m = matchPlace(el.textContent);
       if (m) el.parentElement.insertBefore(makeLink(m.query, m.pid), el.nextSibling);
     });
 
-    // Option items (checkboxes)
     document.querySelectorAll('.option-item label').forEach(function(el) {
       var m = matchPlace(el.textContent);
       if (m) el.appendChild(makeLink(m.query, m.pid));
     });
 
-    // Reference section
     document.querySelectorAll('.reference-col li').forEach(function(el) {
       var m = matchPlace(el.textContent);
       if (m) el.appendChild(makeLink(m.query, m.pid));
     });
   }
 
-  // Hook into Firebase sync — re-inject pins after every sync
   var origSetSyncStatus = window.setSyncStatus;
   window.setSyncStatus = function(status) {
     origSetSyncStatus(status);
     if (status === 'synced') {
-      // Small delay to let DOM update after Firebase applies changes
       setTimeout(injectAllPins, 100);
     }
   };
 
-  // Also inject once on load in case Firebase is slow or offline
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() { setTimeout(injectAllPins, 500); });
   } else {
